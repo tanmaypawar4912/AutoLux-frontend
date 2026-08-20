@@ -5,23 +5,22 @@ import CallToAction from "../components/home/CallToAction";
 import BrowseBrands from "../components/home/BrowseBrands";
 import RecentlyViewed from "../components/RecentlyViewed";
 
-
 const Home = () => {
   return (
-    <div className="overflow-hidden bg-white">
-
+    <div className="relative overflow-x-hidden bg-white">
       <Hero />
 
-      <FeaturedCars />
+      <div className="relative z-20 bg-white">
+        <FeaturedCars />
 
-      <RecentlyViewed />
+        <RecentlyViewed />
 
-      <BrowseBrands />
+        <BrowseBrands />
 
-      <WhyChoose />
+        <WhyChoose />
 
-      <CallToAction />
-
+        <CallToAction />
+      </div>
     </div>
   );
 };

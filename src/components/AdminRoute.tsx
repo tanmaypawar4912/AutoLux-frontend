@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const ADMIN_USER_ID = "user_3GzaE85qWcwbA4MiqOj6Ciz9ALO";
+const ADMIN_USER_ID = "user_3HUi3th0CqRgPDJqmnNYA5LwPGm";
 
 const AdminRoute = ({ children }: Props) => {
   const { isLoaded, userId } = useAuth();

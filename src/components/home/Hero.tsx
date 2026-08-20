@@ -3,278 +3,295 @@ import { Link } from "react-router-dom";
 import { cars } from "../../data/cars";
 
 const Hero = () => {
-  // =============================
-  // ACTIVE CAR
-  // =============================
-
   const [activeCar, setActiveCar] = useState(0);
-
-
-  // =============================
-  // MOUSE POSITION
-  // =============================
-
-  const [mousePosition, setMousePosition] = useState({
-    x: 0,
-    y: 0,
-  });
-
-
-  // Current Car
 
   const car = cars[activeCar];
 
-
   // =============================
-  // AUTOMATIC CAR SLIDER
+  // AUTO SLIDER
   // =============================
 
   useEffect(() => {
-
     const slider = setInterval(() => {
-
-      setActiveCar(
-        (current) => (current + 1) % cars.length
-      );
-
+      setActiveCar((current) => (current + 1) % cars.length);
     }, 5000);
 
-
-    return () => {
-
-      clearInterval(slider);
-
-    };
-
+    return () => clearInterval(slider);
   }, []);
-
-
-  // =============================
-  // MOUSE MOVEMENT EFFECT
-  // =============================
-
-  useEffect(() => {
-
-    const handleMouseMove = (
-      event: MouseEvent
-    ) => {
-
-      const x =
-        (event.clientX / window.innerWidth - 0.5) * 2;
-
-
-      const y =
-        (event.clientY / window.innerHeight - 0.5) * 2;
-
-
-      setMousePosition({
-        x,
-        y,
-      });
-
-    };
-
-
-    window.addEventListener(
-      "mousemove",
-      handleMouseMove
-    );
-
-
-    return () => {
-
-      window.removeEventListener(
-        "mousemove",
-        handleMouseMove
-      );
-
-    };
-
-  }, []);
-
 
   return (
-
-    <section className="
-      relative
-      min-h-screen
-      overflow-hidden
-      bg-[#0f0f0f]
-      px-6
-      py-32
-      text-white
-    ">
-
-
-      {/* =============================
-          ANIMATED BACKGROUND
-      ============================== */}
-
-      <div className="
-        pointer-events-none
-        absolute
-        inset-0
+    <section
+      className="
+        relative
+        min-h-[100vh]
+        w-full
         overflow-hidden
-      ">
+        bg-black
+        text-white
+      "
+    >
+      {/* =================================
+          FIXED FULL PAGE BACKGROUND CAR IMAGE
+      ================================= */}
 
+      <div className="pointer-events-none fixed inset-0 z-0">
+        {cars.map((item, index) => (
+          <img
+            key={item.id}
+            src={item.image}
+            alt={item.name}
+            className={`
+              absolute
+              inset-0
+              h-full
+              w-full
+              object-cover
+              object-center
+              transition-all
+              duration-[1500ms]
+              ease-in-out
+              ${
+                activeCar === index
+                  ? "scale-100 opacity-100"
+                  : "scale-105 opacity-0"
+              }
+            `}
+            style={{
+              filter:
+                activeCar === index
+                  ? "brightness(1.3) contrast(1.08) saturate(1.15)"
+                  : "brightness(1)",
+            }}
+          />
+        ))}
+      </div>
 
-        {/* MOVING GLOW 1 */}
+      {/* =================================
+          PREMIUM DARK OVERLAY
+      ================================= */}
 
-        <div className="
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-black/20" />
+
+      {/* LEFT GRADIENT FOR TEXT */}
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          z-[1]
+          bg-gradient-to-r
+          from-black/80
+          via-black/35
+          to-transparent
+        "
+      />
+
+      {/* BOTTOM GRADIENT */}
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-x-0
+          bottom-0
+          z-[1]
+          h-80
+          bg-gradient-to-t
+          from-black
+          via-black/45
+          to-transparent
+        "
+      />
+
+      {/* TOP GRADIENT
+          Navbar area blends with hero
+      */}
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-x-0
+          top-0
+          z-[1]
+          h-40
+          bg-gradient-to-b
+          from-black/60
+          via-black/20
+          to-transparent
+        "
+      />
+
+      {/* =================================
+          RED PREMIUM GLOW
+      ================================= */}
+
+      <div
+        className="
+          pointer-events-none
           absolute
           -left-32
-          top-20
-          h-72
-          w-72
-          rounded-full
-          bg-[#ff4054]/10
-          blur-3xl
-          animate-[floatGlow_8s_ease-in-out_infinite]
-        " />
-
-
-        {/* MOVING GLOW 2 */}
-
-        <div className="
-          absolute
-          -right-32
-          bottom-20
+          top-1/3
+          z-[1]
           h-96
           w-96
           rounded-full
-          bg-[#ff4054]/5
-          blur-3xl
-          animate-[floatGlowReverse_10s_ease-in-out_infinite]
-        " />
+          bg-[#ff4054]/15
+          blur-[120px]
+        "
+      />
 
-
-        {/* GRID BACKGROUND */}
-
-        <div className="
+      <div
+        className="
+          pointer-events-none
           absolute
-          inset-0
-          opacity-[0.04]
-          [background-image:linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.5)_1px,transparent_1px)]
-          [background-size:80px_80px]
-        " />
+          -right-32
+          top-1/4
+          z-[1]
+          h-80
+          w-80
+          rounded-full
+          bg-[#ff4054]/10
+          blur-[120px]
+        "
+      />
 
-      </div>
-
-
-      {/* =============================
+      {/* =================================
           MAIN CONTENT
-      ============================== */}
+      ================================= */}
 
-      <div className="
-        relative
-        z-10
-        mx-auto
-        max-w-7xl
-      ">
+      <div
+        className="
+          relative
+          z-10
+          flex
+          min-h-[115vh]
+          w-full
+          items-end
+        "
+      >
+        <div
+          className="
+            w-full
+            px-6
+            pb-20
+            sm:px-10
+            sm:pb-24
+            lg:px-16
+            lg:pb-50
+            xl:px-24
+            2xl:px-32
+          "
+        >
+          <div className="max-w-3xl">
 
+            {/* SMALL TITLE */}
 
-        {/* =============================
-            HERO CONTENT
-        ============================== */}
-
-        <div className="
-          grid
-          items-center
-          gap-12
-          lg:grid-cols-2
-        ">
-
-
-          {/* =============================
-              LEFT SIDE
-          ============================== */}
-
-          <div>
-
-            <p className="
-              text-sm
-              font-bold
-              uppercase
-              tracking-[0.35em]
-              text-[#ff4054]
-            ">
+            <p
+              className="
+                mb-5
+                text-xs
+                font-bold
+                uppercase
+                tracking-[0.35em]
+                text-[#ff4054]
+                sm:text-sm
+              "
+            >
               Premium Automotive Experience
             </p>
 
+            {/* MAIN TITLE */}
 
-            <h1 className="
-              mt-6
-              max-w-3xl
-              text-5xl
-              font-black
-              leading-tight
-              md:text-7xl
-            ">
-
-              Drive Your
-
+            <h1
+              className="
+                text-5xl
+                font-black
+                leading-[0.92]
+                tracking-tight
+                sm:text-6xl
+                md:text-7xl
+                lg:text-8xl
+                xl:text-9xl
+              "
+            >
+              Drive Your{" "}
               <span className="text-[#ff4054]">
-                {" "}Dream.
+                Dream.
               </span>
-
             </h1>
 
+            {/* DESCRIPTION */}
 
-            <p className="
-              mt-6
-              max-w-xl
-              text-lg
-              leading-8
-              text-gray-400
-            ">
-              Discover a curated collection of premium vehicles
-              selected for those who expect more from every drive.
+            <p
+              className="
+                mt-6
+                max-w-xl
+                text-sm
+                leading-7
+                text-gray-100
+                sm:text-base
+                lg:text-lg
+                lg:leading-8
+              "
+            >
+              Discover a curated collection of premium
+              vehicles selected for those who expect more
+              from every drive.
             </p>
 
+            {/* =================================
+                BUTTONS
+            ================================= */}
 
-            {/* BUTTONS */}
-
-            <div className="
-              mt-10
-              flex
-              flex-wrap
-              gap-4
-            ">
-
+            <div className="mt-8 flex flex-wrap gap-3 sm:mt-10">
 
               <Link
                 to="/cars"
                 className="
                   rounded-xl
                   bg-[#ff4054]
-                  px-7
-                  py-4
+                  px-6
+                  py-3.5
+                  text-sm
                   font-bold
+                  text-white
+                  shadow-xl
+                  shadow-[#ff4054]/30
                   transition
                   duration-300
                   hover:-translate-y-1
                   hover:bg-[#e9364a]
-                  hover:shadow-lg
-                  hover:shadow-[#ff4054]/30
+                  hover:shadow-[#ff4054]/50
+                  sm:px-7
+                  sm:py-4
                 "
               >
                 Explore Collection →
               </Link>
-
 
               <Link
                 to="/sell"
                 className="
                   rounded-xl
                   border
-                  border-white/20
-                  px-7
-                  py-4
+                  border-white/40
+                  bg-black/25
+                  px-6
+                  py-3.5
+                  text-sm
                   font-bold
+                  text-white
+                  backdrop-blur-md
                   transition
                   duration-300
+                  hover:-translate-y-1
                   hover:border-[#ff4054]
+                  hover:bg-black/40
                   hover:text-[#ff4054]
+                  sm:px-7
+                  sm:py-4
                 "
               >
                 Sell Your Car
@@ -282,238 +299,180 @@ const Hero = () => {
 
             </div>
 
-          </div>
+            {/* =================================
+                CAR INFORMATION
+            ================================= */}
 
-
-          {/* =============================
-              RIGHT SIDE
-          ============================== */}
-
-          <div className="
-            relative
-            flex
-            min-h-[450px]
-            items-center
-            justify-center
-          ">
-
-
-            {/* CAR GLOW */}
-
-            <div className="
-              absolute
-              h-80
-              w-80
-              rounded-full
-              bg-[#ff4054]/10
-              blur-3xl
-            " />
-
-
-            {/* CAR IMAGE */}
-
-            <img
-              key={car.id}
-              src={car.image}
-              alt={car.name}
-
-              style={{
-                transform: `
-                  perspective(1000px)
-                  rotateY(${mousePosition.x * 5}deg)
-                  rotateX(${mousePosition.y * -5}deg)
-                  translateX(${mousePosition.x * 10}px)
-                  translateY(${mousePosition.y * 10}px)
-                `,
-              }}
-
+            <div
               className="
-                relative
-                z-10
-                w-full
+                mt-10
+                grid
                 max-w-2xl
-                object-contain
-                animate-[carEnter_0.8s_ease-out]
-                drop-shadow-[0_30px_40px_rgba(0,0,0,0.7)]
-                transition-transform
-                duration-300
-                ease-out
+                grid-cols-2
+                gap-5
+                border-t
+                border-white/25
+                pt-6
+                sm:grid-cols-4
+                sm:gap-6
               "
-            />
-
-          </div>
-
-        </div>
-
-
-        {/* =============================
-            CAR SELECTOR
-        ============================== */}
-
-        <div className="
-          mt-20
-          flex
-          flex-wrap
-          justify-center
-          gap-4
-        ">
-
-          {cars.map((item, index) => (
-
-            <button
-              key={item.id}
-
-              onClick={() => setActiveCar(index)}
-
-              className={`
-                rounded-full
-                px-5
-                py-3
-                text-sm
-                font-bold
-                transition
-                duration-300
-
-                ${
-                  activeCar === index
-                    ? "bg-[#ff4054] text-white"
-                    : "border border-white/10 text-gray-400 hover:border-[#ff4054] hover:text-white"
-                }
-              `}
             >
 
-              {item.name}
+              {/* HORSEPOWER */}
 
-            </button>
+              <div>
+                <p
+                  className="
+                    text-xl
+                    font-black
+                    text-[#ff4054]
+                    sm:text-2xl
+                  "
+                >
+                  {car.horsepower}
+                </p>
 
-          ))}
+                <p
+                  className="
+                    mt-1
+                    text-[9px]
+                    uppercase
+                    tracking-widest
+                    text-gray-300
+                    sm:text-xs
+                  "
+                >
+                  Horsepower
+                </p>
+              </div>
 
+              {/* ACCELERATION */}
+
+              <div>
+                <p
+                  className="
+                    text-xl
+                    font-black
+                    text-[#ff4054]
+                    sm:text-2xl
+                  "
+                >
+                  {car.acceleration}
+                </p>
+
+                <p
+                  className="
+                    mt-1
+                    text-[9px]
+                    uppercase
+                    tracking-widest
+                    text-gray-300
+                    sm:text-xs
+                  "
+                >
+                  0-100 km/h
+                </p>
+              </div>
+
+              {/* TOP SPEED */}
+
+              <div>
+                <p
+                  className="
+                    text-xl
+                    font-black
+                    text-[#ff4054]
+                    sm:text-2xl
+                  "
+                >
+                  {car.topSpeed}
+                </p>
+
+                <p
+                  className="
+                    mt-1
+                    text-[9px]
+                    uppercase
+                    tracking-widest
+                    text-gray-300
+                    sm:text-xs
+                  "
+                >
+                  Top Speed
+                </p>
+              </div>
+
+              {/* PRICE */}
+
+              <div>
+                <p
+                  className="
+                    text-xl
+                    font-black
+                    text-[#ff4054]
+                    sm:text-2xl
+                  "
+                >
+                  {car.price}
+                </p>
+
+                <p
+                  className="
+                    mt-1
+                    text-[9px]
+                    uppercase
+                    tracking-widest
+                    text-gray-300
+                    sm:text-xs
+                  "
+                >
+                  Starting Price
+                </p>
+              </div>
+
+            </div>
+          </div>
         </div>
-
-
-        {/* =============================
-            ACTIVE CAR INFO
-        ============================== */}
-
-        <div className="
-          mt-10
-          grid
-          grid-cols-2
-          gap-6
-          border-t
-          border-white/10
-          pt-8
-          md:grid-cols-4
-        ">
-
-
-          {/* HORSEPOWER */}
-
-          <div>
-
-            <p className="
-              text-2xl
-              font-black
-              text-[#ff4054]
-            ">
-              {car.horsepower}
-            </p>
-
-            <p className="
-              mt-1
-              text-xs
-              uppercase
-              tracking-widest
-              text-gray-500
-            ">
-              Horsepower
-            </p>
-
-          </div>
-
-
-          {/* ACCELERATION */}
-
-          <div>
-
-            <p className="
-              text-2xl
-              font-black
-              text-[#ff4054]
-            ">
-              {car.acceleration}
-            </p>
-
-            <p className="
-              mt-1
-              text-xs
-              uppercase
-              tracking-widest
-              text-gray-500
-            ">
-              0-100 km/h
-            </p>
-
-          </div>
-
-
-          {/* TOP SPEED */}
-
-          <div>
-
-            <p className="
-              text-2xl
-              font-black
-              text-[#ff4054]
-            ">
-              {car.topSpeed}
-            </p>
-
-            <p className="
-              mt-1
-              text-xs
-              uppercase
-              tracking-widest
-              text-gray-500
-            ">
-              Top Speed
-            </p>
-
-          </div>
-
-
-          {/* PRICE */}
-
-          <div>
-
-            <p className="
-              text-2xl
-              font-black
-              text-[#ff4054]
-            ">
-              {car.price}
-            </p>
-
-            <p className="
-              mt-1
-              text-xs
-              uppercase
-              tracking-widest
-              text-gray-500
-            ">
-              Starting Price
-            </p>
-
-          </div>
-
-        </div>
-
       </div>
 
+ 
+      {/* =================================
+          SLIDE INDICATOR
+      ================================= */}
+
+      <div
+        className="
+          absolute
+          bottom-7
+          left-1/2
+          z-20
+          flex
+          -translate-x-1/2
+          gap-2
+        "
+      >
+        {cars.map((item, index) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setActiveCar(index)}
+            aria-label={`Show ${item.name}`}
+            className={`
+              h-1
+              rounded-full
+              transition-all
+              duration-500
+              ${
+                activeCar === index
+                  ? "w-10 bg-[#ff4054]"
+                  : "w-3 bg-white/50"
+              }
+            `}
+          />
+        ))}
+      </div>
     </section>
-
   );
-
 };
 
 export default Hero;

@@ -58,7 +58,7 @@ const BrowseBrands = () => {
               className="
                 rounded-2xl
                 border
-                border-gray-200
+               border-[#ff4054]
                 bg-white
                 px-8
                 py-5

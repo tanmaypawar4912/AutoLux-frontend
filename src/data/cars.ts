@@ -30,6 +30,8 @@ export interface Car {
   createdAt?: string;
   updatedAt?: string;
   city?: string;
+  carCategory?: string;
+  bodyType?: string;
   views?: number;
 }
 
@@ -44,7 +46,7 @@ export const cars: StaticCar[] = [
     tagline: "Born to dominate every road.",
     description:
       "A perfect combination of aggressive design, incredible performance and pure driving emotion.",
-    image: "/images/bmw-m4.png.png",
+    image: "/images/bmw-m4.png",
     horsepower: "503 HP",
     acceleration: "3.8 Sec",
     topSpeed: "250 Km/h",
@@ -60,7 +62,7 @@ export const cars: StaticCar[] = [
     tagline: "Luxury with an electrifying attitude.",
     description:
       "The BMW X5 combines breathtaking performance with bold luxury and advanced technology.",
-    image: "/images/bmw-x5.png.png",
+    image: "/images/bmw-x5.png",
     horsepower: "335 HP",
     acceleration: "5.3 Sec",
     topSpeed: "250 Km/h",
@@ -78,7 +80,7 @@ export const cars: StaticCar[] = [
     tagline: "Luxury meets unstoppable performance.",
     description:
       "Experience handcrafted luxury combined with powerful Mercedes engineering.",
-    image: "/images/mercedes-c-class.png.png",
+    image: "/images/mercedes-c-class.png",
     horsepower: "255 HP",
     acceleration: "5.9 Sec",
     topSpeed: "250 Km/h",
@@ -95,7 +97,7 @@ export const cars: StaticCar[] = [
     tagline: "Iconic design. Unmatched presence.",
     description:
       "A premium SUV combining comfort, technology and outstanding performance.",
-    image: "/images/mercedes-glc.png.png",
+    image: "/images/mercedes-glc.png",
     horsepower: "375 HP",
     acceleration: "5.2 Sec",
     topSpeed: "250 Km/h",
@@ -113,7 +115,7 @@ export const cars: StaticCar[] = [
     tagline: "Progress through performance.",
     description:
       "A powerful luxury sedan combining comfort with advanced technology.",
-    image: "/images/audi-a6.png.png",
+    image: "/images/audi-a6.png",
     horsepower: "241 HP",
     acceleration: "6.5 Sec",
     topSpeed: "250 Km/h",
@@ -130,7 +132,7 @@ export const cars: StaticCar[] = [
     tagline: "Bold design. Refined performance.",
     description:
       "A sophisticated SUV offering powerful performance and premium comfort.",
-    image: "/images/audi-q8.png.png",
+    image: "/images/audi-q8.png",
     horsepower: "335 HP",
     acceleration: "5.6 Sec",
     topSpeed: "250 Km/h",

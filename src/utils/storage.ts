@@ -1,5 +1,11 @@
 const WISHLIST_KEY = "autolux_wishlist";
-export const WISHLIST_EVENT = "autolux-wishlist-updated";
+
+export const WISHLIST_EVENT =
+  "autolux-wishlist-updated";
+
+// ======================================
+// WISHLIST CAR
+// ======================================
 
 export interface WishlistCar {
   _id: string;
@@ -9,37 +15,159 @@ export interface WishlistCar {
   price: number;
 }
 
+// ======================================
+// GET LOCAL WISHLIST
+// ======================================
+
 export const getWishlist = (): WishlistCar[] => {
-  const data = localStorage.getItem(WISHLIST_KEY);
-  return data ? JSON.parse(data) : [];
-};
+  try {
+    const data =
+      localStorage.getItem(WISHLIST_KEY);
 
-export const isWishlisted = (id: string) => {
-  return getWishlist().some((item) => item._id === id);
-};
+    if (!data) {
+      return [];
+    }
 
-const persistAndNotify = (items: WishlistCar[]) => {
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
-  window.dispatchEvent(new Event(WISHLIST_EVENT));
-};
+    const parsed = JSON.parse(data);
 
-export const addToWishlist = (car: WishlistCar) => {
-  const items = getWishlist();
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
 
-  if (!items.find((item) => item._id === car._id)) {
-    items.push(car);
-    persistAndNotify(items);
+    return parsed as WishlistCar[];
+  } catch (error) {
+    console.error(
+      "Get Wishlist Storage Error:",
+      error
+    );
+
+    return [];
   }
 };
 
-export const removeFromWishlist = (id: string) => {
-  const items = getWishlist().filter((car: { _id: string }) => car._id !== id);
+// ======================================
+// CHECK WISHLIST
+// ======================================
+
+export const isWishlisted = (
+  id: string
+): boolean => {
+  return getWishlist().some(
+    (item) => item._id === id
+  );
+};
+
+// ======================================
+// SAVE LOCAL CACHE
+// ======================================
+
+const persistAndNotify = (
+  items: WishlistCar[]
+) => {
+  try {
+    localStorage.setItem(
+      WISHLIST_KEY,
+      JSON.stringify(items)
+    );
+
+    window.dispatchEvent(
+      new Event(WISHLIST_EVENT)
+    );
+  } catch (error) {
+    console.error(
+      "Save Wishlist Storage Error:",
+      error
+    );
+  }
+};
+
+// ======================================
+// REPLACE LOCAL WISHLIST
+// MongoDB -> Local UI Cache
+// ======================================
+
+export const replaceWishlist = (
+  items: WishlistCar[]
+) => {
   persistAndNotify(items);
 };
 
-export const toggleWishlist = (car: { _id: string; brand: string; model: string; image: string; price: number }) => {
-  if (isWishlisted(car._id)) {
-    removeFromWishlist(car._id);
+// ======================================
+// ADD TO LOCAL CACHE
+// ======================================
+
+export const addToWishlist = (
+  car: WishlistCar
+) => {
+  const items = getWishlist();
+
+  const exists = items.some(
+    (item) =>
+      item._id === car._id
+  );
+
+  if (!exists) {
+    persistAndNotify([
+      ...items,
+      car,
+    ]);
+  }
+};
+
+// ======================================
+// REMOVE FROM LOCAL CACHE
+// ======================================
+
+export const removeFromWishlist = (
+  id: string
+) => {
+  const items =
+    getWishlist().filter(
+      (car) =>
+        car._id !== id
+    );
+
+  persistAndNotify(items);
+};
+
+// ======================================
+// CLEAR WISHLIST
+// IMPORTANT:
+// Called on logout / signed-out state
+// ======================================
+
+export const clearWishlist = () => {
+  try {
+    localStorage.removeItem(
+      WISHLIST_KEY
+    );
+
+    window.dispatchEvent(
+      new Event(WISHLIST_EVENT)
+    );
+  } catch (error) {
+    console.error(
+      "Clear Wishlist Storage Error:",
+      error
+    );
+  }
+};
+
+// ======================================
+// LEGACY TOGGLE
+// Keep this because other components
+// may still import it.
+// ======================================
+
+export const toggleWishlist = (
+  car: WishlistCar
+) => {
+  if (
+    isWishlisted(car._id)
+  ) {
+    removeFromWishlist(
+      car._id
+    );
   } else {
     addToWishlist(car);
   }

@@ -1,5 +1,12 @@
-import { useState, type FormEvent } from "react";
-import { useUser } from "@clerk/clerk-react";
+import {
+  useState,
+  type FormEvent,
+} from "react";
+import {
+  useUser,
+  useAuth,
+} from "@clerk/clerk-react";
+import { toast } from "sonner";
 import { API } from "../utils/api";
 
 interface Props {
@@ -14,76 +21,315 @@ interface Props {
   onClose: () => void;
 }
 
-const BookingModal = ({ car, onClose }: Props) => {
-  const { user } = useUser();
+const BookingModal = ({
+  car,
+  onClose,
+}: Props) => {
+  const {
+    user,
+    isLoaded: userLoaded,
+  } = useUser();
 
-  const [phone, setPhone] = useState("");
-  const [preferredDate, setPreferredDate] = useState("");
-  const [preferredTime, setPreferredTime] = useState("");
-  const [message, setMessage] = useState("");
+  const {
+    isLoaded: authLoaded,
+    getToken,
+  } = useAuth();
 
-  const [loading, setLoading] = useState(false);
+  const [phone, setPhone] =
+    useState("");
+
+  const [preferredDate, setPreferredDate] =
+    useState("");
+
+  const [preferredTime, setPreferredTime] =
+    useState("");
+
+  const [message, setMessage] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  // =========================================
+  // BOOK TEST DRIVE
+  // =========================================
 
   const handleSubmit = async (
     e: FormEvent
   ) => {
     e.preventDefault();
 
+    // =======================================
+    // AUTHENTICATION CHECK
+    // =======================================
+
+    if (
+      !userLoaded ||
+      !authLoaded
+    ) {
+      toast.info(
+        "Checking your login status. Please try again."
+      );
+      return;
+    }
+
+    if (!user) {
+      toast.warning(
+        "Please login to book a test drive."
+      );
+      return;
+    }
+
+    // =======================================
+    // GET CLERK TOKEN
+    // =======================================
+
+    const token =
+      await getToken();
+
+    if (!token) {
+      toast.warning(
+        "Your login session is not available. Please login again."
+      );
+      return;
+    }
+
+    // =======================================
+    // PHONE VALIDATION
+    // =======================================
+
+    const cleanPhone =
+      phone.trim();
+
+    if (!cleanPhone) {
+      toast.warning(
+        "Please enter your phone number."
+      );
+      return;
+    }
+
+    const phoneRegex =
+      /^[0-9]{10}$/;
+
+    if (
+      !phoneRegex.test(cleanPhone)
+    ) {
+      toast.warning(
+        "Please enter a valid 10-digit phone number."
+      );
+      return;
+    }
+
+    // =======================================
+    // DATE VALIDATION
+    // =======================================
+
+    if (!preferredDate) {
+      toast.warning(
+        "Please select a preferred date."
+      );
+      return;
+    }
+
+    // =======================================
+    // PREVENT PAST DATE
+    // =======================================
+
+    const selectedDate =
+      new Date(
+        `${preferredDate}T00:00:00`
+      );
+
+    const today =
+      new Date();
+
+    today.setHours(
+      0,
+      0,
+      0,
+      0
+    );
+
+    if (
+      selectedDate < today
+    ) {
+      toast.warning(
+        "Please select today or a future date."
+      );
+      return;
+    }
+
+    // =======================================
+    // TIME VALIDATION
+    // =======================================
+
+    if (!preferredTime) {
+      toast.warning(
+        "Please select a preferred time."
+      );
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${API}/bookings`,
-        {
-          method: "POST",
+      const response =
+        await fetch(
+          `${API}/bookings`,
+          {
+            method: "POST",
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+            headers: {
+              "Content-Type":
+                "application/json",
 
-          body: JSON.stringify({
-            carId: car._id,
-            carBrand: car.brand,
-            carModel: car.model,
-            carImage: car.image,
+              // IMPORTANT:
+              // Booking is authenticated at
+              // the backend as well.
+              Authorization:
+                `Bearer ${token}`,
+            },
 
-            sellerEmail: car.sellerEmail,
+            body: JSON.stringify({
+              carId: car._id,
 
-            customerName:
-              user?.fullName || "Unknown",
+              carBrand:
+                car.brand,
 
-            customerEmail:
-              user?.primaryEmailAddress
-                ?.emailAddress,
+              carModel:
+                car.model,
 
-            customerPhone: phone,
+              carImage:
+                car.image,
 
-            preferredDate,
+              sellerEmail:
+                car.sellerEmail,
 
-            preferredTime,
+              customerName:
+                user.fullName ||
+                "Unknown",
 
-            message,
-          }),
-        }
-      );
+              customerEmail:
+                user
+                  .primaryEmailAddress
+                  ?.emailAddress,
 
-      const data = await response.json();
+              customerPhone:
+                cleanPhone,
+
+              preferredDate,
+
+              preferredTime,
+
+              message:
+                message.trim(),
+            }),
+          }
+        );
+
+      const data =
+        await response.json();
+
+      // =====================================
+      // SUCCESS
+      // =====================================
 
       if (data.success) {
-        alert("Test Drive Booked Successfully 🚗");
+        toast.success(
+          "Test drive booked successfully! 🚗"
+        );
 
         onClose();
-      } else {
-        alert(data.message);
+      }
+
+      // =====================================
+      // SERVER ERROR
+      // =====================================
+
+      else {
+        toast.error(
+          data.message ||
+            "Unable to book test drive. Please try again."
+        );
       }
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Test Drive Booking Error:",
+        error
+      );
 
-      alert("Something went wrong.");
+      toast.error(
+        "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  // =========================================
+  // WAIT FOR CLERK AUTH STATE
+  // =========================================
+
+  if (
+    !userLoaded ||
+    !authLoaded
+  ) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="w-full max-w-lg rounded-3xl bg-white p-8">
+          <h2 className="mb-4 text-3xl font-black">
+            Book Test Drive
+          </h2>
+
+          <p className="text-gray-600">
+            Checking your login status...
+          </p>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-6 w-full rounded-xl border py-4 font-bold"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================
+  // LOGGED-OUT USERS: VIEW ONLY
+  // =========================================
+
+  if (!user) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="w-full max-w-lg rounded-3xl bg-white p-8">
+          <h2 className="mb-4 text-3xl font-black">
+            Login Required
+          </h2>
+
+          <p className="text-gray-600">
+            Please login to book a test drive.
+            You can continue viewing cars without
+            logging in.
+          </p>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-6 w-full rounded-xl bg-[#ff4054] py-4 font-bold text-white"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================
+  // AUTHENTICATED BOOKING FORM
+  // =========================================
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -105,7 +351,9 @@ const BookingModal = ({ car, onClose }: Props) => {
             required
             value={phone}
             onChange={(e) =>
-              setPhone(e.target.value)
+              setPhone(
+                e.target.value
+              )
             }
             className="w-full rounded-xl border p-4"
           />
@@ -114,6 +362,11 @@ const BookingModal = ({ car, onClose }: Props) => {
             type="date"
             required
             value={preferredDate}
+            min={
+              new Date()
+                .toISOString()
+                .split("T")[0]
+            }
             onChange={(e) =>
               setPreferredDate(
                 e.target.value
@@ -136,13 +389,29 @@ const BookingModal = ({ car, onClose }: Props) => {
               Select Time
             </option>
 
-            <option>10:00 AM</option>
-            <option>11:00 AM</option>
-            <option>12:00 PM</option>
-            <option>02:00 PM</option>
-            <option>03:00 PM</option>
-            <option>04:00 PM</option>
+            <option>
+              10:00 AM
+            </option>
 
+            <option>
+              11:00 AM
+            </option>
+
+            <option>
+              12:00 PM
+            </option>
+
+            <option>
+              02:00 PM
+            </option>
+
+            <option>
+              03:00 PM
+            </option>
+
+            <option>
+              04:00 PM
+            </option>
           </select>
 
           <textarea
@@ -150,7 +419,9 @@ const BookingModal = ({ car, onClose }: Props) => {
             placeholder="Message (Optional)"
             value={message}
             onChange={(e) =>
-              setMessage(e.target.value)
+              setMessage(
+                e.target.value
+              )
             }
             className="w-full rounded-xl border p-4"
           />
@@ -160,14 +431,16 @@ const BookingModal = ({ car, onClose }: Props) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-xl border py-4 font-bold"
+              disabled={loading}
+              className="flex-1 rounded-xl border py-4 font-bold disabled:opacity-50"
             >
               Cancel
             </button>
 
             <button
+              type="submit"
               disabled={loading}
-              className="flex-1 rounded-xl bg-[#ff4054] py-4 font-bold text-white"
+              className="flex-1 rounded-xl bg-[#ff4054] py-4 font-bold text-white disabled:opacity-50"
             >
               {loading
                 ? "Booking..."

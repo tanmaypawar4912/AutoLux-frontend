@@ -1,84 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ScrollToTop = () => {
-
-  const [showButton, setShowButton] = useState(false);
-
+  const { pathname } = useLocation();
 
   useEffect(() => {
-
-    const handleScroll = () => {
-
-      setShowButton(window.scrollY > 400);
-
-    };
-
-
-    window.addEventListener(
-      "scroll",
-      handleScroll
-    );
-
-
-    return () => {
-
-      window.removeEventListener(
-        "scroll",
-        handleScroll
-      );
-
-    };
-
-  }, []);
-
-
-  const scrollToTop = () => {
-
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      left: 0,
+      behavior: "instant",
     });
+  }, [pathname]);
 
-  };
-
-
-  if (!showButton) {
-    return null;
-  }
-
-
-  return (
-
-    <button
-      onClick={scrollToTop}
-      className="
-        fixed
-        bottom-6
-        right-6
-        z-40
-        flex
-        h-12
-        w-12
-        items-center
-        justify-center
-        rounded-full
-        bg-[#ff4054]
-        text-xl
-        text-white
-        shadow-xl
-        transition
-        duration-300
-        hover:-translate-y-1
-        hover:bg-[#e9364a]
-      "
-      aria-label="Scroll to top"
-    >
-      ↑
-    </button>
-
-  );
-
+  return null;
 };
-
 
 export default ScrollToTop;

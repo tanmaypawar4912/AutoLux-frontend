@@ -27,19 +27,6 @@
 }
 
 @keyframes carEnter {
-
-  0% {
-    opacity: 0;
-    transform: translateX(60px) scale(0.95);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-
-}
-@keyframes carEnter {
   from {
     opacity: 0;
     transform: translateX(40px) scale(0.92);

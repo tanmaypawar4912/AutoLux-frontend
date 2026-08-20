@@ -3,16 +3,23 @@ import {
   Route,
 } from "react-router-dom";
 
+// ==============================
+// PUBLIC PAGES
+// ==============================
+
 import Home from "../pages/Home";
 import BuyCars from "../pages/BuyCars";
 import CarDetails from "../pages/CarDetails";
-import SellCar from "../pages/SellCar";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import NotFound from "../pages/NotFound";
-import ProtectedRoute from "../components/ProtectedRoute";
-import AdminDashboard from "../pages/AdminDashboard";
-import ProtectedAdminRoute from "../components/ProtectedAdminRoute";
+import SignIn from "../pages/SignIn";
+
+// ==============================
+// USER / PROTECTED PAGES
+// ==============================
+
+import SellCar from "../pages/SellCar";
 import MyCars from "../pages/MyCars";
 import EditCar from "../pages/EditCar";
 import MyBookings from "../pages/MyBookings";
@@ -20,34 +27,70 @@ import Wishlist from "../pages/Wishlist";
 import Compare from "../pages/Compare";
 import Valuation from "../pages/Valuation";
 
+import ProtectedRoute from "../components/ProtectedRoute";
+
+// ADMIN
+
+
+import ProtectedAdminRoute from "../components/ProtectedAdminRoute";
+
+import AdminDashboard from "../pages/AdminDashboard";
+import AdminBookings from "../pages/AdminBookings";
+import AdminCars from "../pages/AdminCars";
+import AdminUsers from "../pages/AdminUsers";
+import AdminWishlist from "../pages/AdminWishlist";
+import AdminReviews from "../pages/AdminReviews";
+import AdminEnquiries from "../pages/AdminEnquiries";
+import AdminSettings from "../pages/AdminSettings";
+
+// ==============================
+// APP ROUTES
+// ==============================
+
 const AppRoutes = () => {
-
   return (
-
     <Routes>
 
-      {/* HOME PAGE */}
+      {/* =====================================
+          HOME
+      ====================================== */}
 
       <Route
         path="/"
         element={<Home />}
       />
 
+      {/* =====================================
+          CLERK SIGN IN
+      ====================================== */}
 
-      {/* BUY CARS PAGE */}
+      <Route
+        path="/sign-in"
+        element={<SignIn />}
+      />
+
+      {/* =====================================
+          BUY CARS
+      ====================================== */}
 
       <Route
         path="/cars"
         element={<BuyCars />}
       />
 
-
-      {/* DYNAMIC CAR DETAILS PAGE */}
+      {/* =====================================
+          CAR DETAILS
+      ====================================== */}
 
       <Route
         path="/cars/:id"
         element={<CarDetails />}
       />
+
+      {/* =====================================
+          MY BOOKINGS
+      ====================================== */}
+
       <Route
         path="/my-bookings"
         element={
@@ -57,7 +100,9 @@ const AppRoutes = () => {
         }
       />
 
-      {/* SELL YOUR CAR PAGE */}
+      {/* =====================================
+          SELL CAR
+      ====================================== */}
 
       <Route
         path="/sell"
@@ -68,38 +113,10 @@ const AppRoutes = () => {
         }
       />
 
+      {/* =====================================
+          MY CARS
+      ====================================== */}
 
-      {/* ABOUT PAGE */}
-
-      <Route
-        path="/about"
-        element={<About />}
-      />
-
-
-      {/* CONTACT PAGE */}
-
-      <Route
-        path="/contact"
-        element={<Contact />}
-      />
-
-
-      {/* 404 PAGE */}
-
-      <Route
-        path="*"
-        element={<NotFound />}
-      />
-
-      <Route
-        path="/admin"
-        element={
-          <ProtectedAdminRoute>
-            <AdminDashboard />
-          </ProtectedAdminRoute>
-        }
-      />
       <Route
         path="/my-cars"
         element={
@@ -108,6 +125,11 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      {/* =====================================
+          EDIT CAR
+      ====================================== */}
+
       <Route
         path="/edit-car/:id"
         element={
@@ -117,33 +139,166 @@ const AppRoutes = () => {
         }
       />
 
-      {/* WISHLIST PAGE */}
+      {/* =====================================
+          WISHLIST
+      ====================================== */}
 
       <Route
         path="/wishlist"
         element={<Wishlist />}
       />
 
-      {/* COMPARE CARS PAGE */}
+      {/* =====================================
+          COMPARE
+      ====================================== */}
 
       <Route
         path="/compare"
         element={<Compare />}
       />
 
-      {/* INSTANT VALUATION PAGE */}
+      {/* =====================================
+          CAR VALUATION
+      ====================================== */}
 
       <Route
         path="/sell/estimate"
         element={<Valuation />}
       />
 
+      {/* =====================================
+          ABOUT
+      ====================================== */}
+
+      <Route
+        path="/about"
+        element={<About />}
+      />
+
+      {/* =====================================
+          CONTACT
+      ====================================== */}
+
+      <Route
+        path="/contact"
+        element={<Contact />}
+      />
+
+      {/* =====================================
+          ADMIN DASHBOARD
+      ====================================== */}
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedAdminRoute>
+            <AdminDashboard />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN CARS
+      ====================================== */}
+
+      <Route
+        path="/admin/cars"
+        element={
+          <ProtectedAdminRoute>
+            <AdminCars />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN USERS
+      ====================================== */}
+
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedAdminRoute>
+            <AdminUsers />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN BOOKINGS
+      ====================================== */}
+
+      <Route
+        path="/admin/bookings"
+        element={
+          <ProtectedAdminRoute>
+            <AdminBookings />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN WISHLIST
+      ====================================== */}
+
+      <Route
+        path="/admin/wishlist"
+        element={
+          <ProtectedAdminRoute>
+            <AdminWishlist />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN REVIEWS
+      ====================================== */}
+
+      <Route
+        path="/admin/reviews"
+        element={
+          <ProtectedAdminRoute>
+            <AdminReviews />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN ENQUIRIES
+      ====================================== */}
+
+      <Route
+        path="/admin/enquiries"
+        element={
+          <ProtectedAdminRoute>
+            <AdminEnquiries />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN SETTINGS
+      ====================================== */}
+
+      <Route
+        path="/admin/settings"
+        element={
+          <ProtectedAdminRoute>
+            <AdminSettings />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          404
+      ====================================== */}
+
+      <Route
+        path="*"
+        element={<NotFound />}
+      />
+
     </Routes>
-
-
   );
-
 };
-
 
 export default AppRoutes;

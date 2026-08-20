@@ -203,7 +203,7 @@ const FeaturedCars = () => {
                     />
 
                     <img
-                      src={car.image || "/default-car.jpg"}
+                      src={car.image || "/images/audi-a6.png"}
                       alt={car.model}
                       className="
                         relative

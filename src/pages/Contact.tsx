@@ -1,142 +1,203 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 import type { FormEvent } from "react";
 import Reveal from "../components/Reveal";
 
 const Contact = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const {
+    user,
+    isLoaded: userLoaded,
+  } = useUser();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [isSubmitted, setIsSubmitted] =
+    useState(false);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, []);
+
+  const handleSubmit = (
+    event: FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
+
+    // =========================================
+    // LOGIN REQUIRED
+    // Logged-out users can view this page only.
+    // =========================================
+
+    if (!userLoaded || !user) {
+      return;
+    }
+
     setIsSubmitted(true);
   };
 
   return (
-    <main className="min-h-screen bg-[#f8f8f8] px-6 pb-24 pt-36">
+    <main className="min-h-screen bg-[#f8f8f8] px-4 pb-16 pt-20 sm:px-6 lg:pt-24">
       <div className="mx-auto max-w-7xl">
 
-        {/* PAGE HEADER */}
+        {/* ================================
+            PAGE HEADER
+        ================================= */}
 
         <Reveal>
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#ff4054]">
+
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#ff4054]">
               Get In Touch
             </p>
 
-            <h1 className="mt-5 text-5xl font-black leading-tight text-[#111] md:text-7xl">
-              Let's Start Your
+            <h1 className="mt-3 text-4xl font-black leading-[1.05] text-[#111] sm:text-5xl md:text-6xl">
+              Let's Start Your{" "}
               <span className="text-[#ff4054]">
-                {" "}Dream Drive.
+                Dream Drive.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-500">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-gray-500 sm:text-lg">
               Have a question about a vehicle, want to book a test drive,
               or simply want to talk cars? Our team is here to help.
             </p>
+
           </div>
         </Reveal>
 
 
-        {/* CONTACT CONTENT */}
+        {/* ================================
+            CONTACT SECTION
+        ================================= */}
 
-        <div className="mt-16 grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+        <div className="mt-7 grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
 
-          {/* CONTACT INFO */}
+          {/* ================================
+              CONTACT INFORMATION
+          ================================= */}
 
           <Reveal>
-            <div className="rounded-3xl bg-[#111] p-8 text-white md:p-10">
+            <div className="h-full rounded-3xl bg-[#111] p-7 text-white sm:p-8">
 
-              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#ff4054]">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#ff4054]">
                 Contact AutoLux
               </p>
 
-              <h2 className="mt-5 text-3xl font-black md:text-4xl">
+              <h2 className="mt-3 text-2xl font-black sm:text-3xl">
                 We Are Here To Help.
               </h2>
 
-              <p className="mt-5 leading-7 text-gray-400">
+              <p className="mt-3 text-sm leading-6 text-gray-400 sm:text-base">
                 Our automotive experts are ready to help you find the
                 perfect vehicle or answer any questions you may have.
               </p>
 
 
-              <div className="mt-10 space-y-7">
+              {/* CONTACT DETAILS */}
 
-                <div className="flex gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#ff4054] text-xl">
+              <div className="mt-7 space-y-5">
+
+                {/* EMAIL */}
+
+                <div className="flex items-center gap-4">
+
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ff4054] text-lg">
                     ✉
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                       Email Us
                     </p>
 
-                    <p className="mt-1 font-bold">
+                    <p className="mt-1 text-sm font-bold sm:text-base">
                       hello@autolux.com
                     </p>
                   </div>
+
                 </div>
 
 
-                <div className="flex gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#ff4054] text-xl">
+                {/* PHONE */}
+
+                <div className="flex items-center gap-4">
+
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ff4054] text-lg">
                     ☎
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                       Call Us
                     </p>
 
-                    <p className="mt-1 font-bold">
+                    <p className="mt-1 text-sm font-bold sm:text-base">
                       +91 98765 43210
                     </p>
                   </div>
+
                 </div>
 
 
-                <div className="flex gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#ff4054] text-xl">
+                {/* LOCATION */}
+
+                <div className="flex items-center gap-4">
+
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ff4054] text-lg">
                     ⌖
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                       Visit Us
                     </p>
 
-                    <p className="mt-1 font-bold">
+                    <p className="mt-1 text-sm font-bold sm:text-base">
                       Pune, Maharashtra
                     </p>
                   </div>
+
                 </div>
 
               </div>
 
 
-              {/* BUSINESS HOURS */}
+              {/* ================================
+                  OPENING HOURS
+              ================================= */}
 
-              <div className="mt-12 border-t border-white/10 pt-8">
+              <div className="mt-7 border-t border-white/10 pt-6">
 
-                <p className="text-sm font-bold uppercase tracking-widest text-[#ff4054]">
+                <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#ff4054]">
                   Opening Hours
                 </p>
 
-                <div className="mt-5 space-y-3 text-sm text-gray-400">
+                <div className="mt-4 space-y-2 text-xs sm:text-sm">
 
-                  <div className="flex justify-between">
-                    <span>Monday - Saturday</span>
+                  <div className="flex items-center justify-between gap-4">
+
+                    <span className="text-gray-400">
+                      Monday - Saturday
+                    </span>
+
                     <span className="font-semibold text-white">
                       9:00 AM - 8:00 PM
                     </span>
+
                   </div>
 
-                  <div className="flex justify-between">
-                    <span>Sunday</span>
+                  <div className="flex items-center justify-between gap-4">
+
+                    <span className="text-gray-400">
+                      Sunday
+                    </span>
+
                     <span className="font-semibold text-white">
                       10:00 AM - 6:00 PM
                     </span>
+
                   </div>
 
                 </div>
@@ -147,35 +208,84 @@ const Contact = () => {
           </Reveal>
 
 
-          {/* CONTACT FORM */}
+          {/* ================================
+              CONTACT FORM
+          ================================= */}
 
           <Reveal>
-
-            <div className="rounded-3xl bg-white p-6 shadow-sm md:p-10">
+            <div className="h-full rounded-3xl bg-white p-6 shadow-sm sm:p-8">
 
               {isSubmitted ? (
 
-                <div className="flex min-h-[550px] flex-col items-center justify-center text-center">
+                /* ================================
+                   SUCCESS MESSAGE
+                ================================= */
 
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-4xl">
+                <div className="flex min-h-[430px] flex-col items-center justify-center text-center">
+
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl">
                     ✓
                   </div>
 
-                  <h2 className="mt-8 text-3xl font-black text-[#111]">
+                  <h2 className="mt-6 text-2xl font-black text-[#111] sm:text-3xl">
                     Message Sent Successfully!
                   </h2>
 
-                  <p className="mt-4 max-w-md leading-7 text-gray-500">
+                  <p className="mt-3 max-w-md text-sm leading-6 text-gray-500 sm:text-base">
                     Thank you for contacting AutoLux. Our team will
                     get back to you as soon as possible.
                   </p>
 
                   <button
+                    type="button"
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-8 rounded-xl bg-[#111] px-6 py-4 font-bold text-white transition hover:bg-[#ff4054]"
+                    className="mt-6 rounded-xl bg-[#111] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#ff4054]"
                   >
                     Send Another Message
                   </button>
+
+                </div>
+
+              ) : !userLoaded ? (
+
+                /* ================================
+                   AUTHENTICATION LOADING
+                ================================= */
+
+                <div className="flex min-h-[430px] flex-col items-center justify-center text-center">
+
+                  <h2 className="text-2xl font-black text-[#111] sm:text-3xl">
+                    Checking Login...
+                  </h2>
+
+                  <p className="mt-3 max-w-md text-sm leading-6 text-gray-500 sm:text-base">
+                    Please wait while we check your login status.
+                  </p>
+
+                </div>
+
+              ) : !user ? (
+
+                /* ================================
+                   LOGIN REQUIRED
+                   Logged-out users can only view.
+                ================================= */
+
+                <div className="flex min-h-[430px] flex-col items-center justify-center text-center">
+
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#ff4054]/10 text-2xl">
+                    🔒
+                  </div>
+
+                  <h2 className="mt-6 text-2xl font-black text-[#111] sm:text-3xl">
+                    Login Required
+                  </h2>
+
+                  <p className="mt-3 max-w-md text-sm leading-6 text-gray-500 sm:text-base">
+                    Please login to send us a message.
+                    You can continue viewing AutoLux and
+                    our cars without logging in.
+                  </p>
 
                 </div>
 
@@ -183,26 +293,33 @@ const Contact = () => {
 
                 <form
                   onSubmit={handleSubmit}
-                  className="space-y-7"
+                  className="space-y-5"
                 >
 
+                  {/* FORM HEADER */}
+
                   <div>
-                    <h2 className="text-3xl font-black text-[#111]">
+
+                    <h2 className="text-2xl font-black text-[#111] sm:text-3xl">
                       Send Us A Message
                     </h2>
 
-                    <p className="mt-2 text-gray-500">
+                    <p className="mt-1 text-sm text-gray-500">
                       Fill in the details below and we will get back to you.
                     </p>
+
                   </div>
 
 
-                  {/* NAME + EMAIL */}
+                  {/* ================================
+                      NAME + EMAIL
+                  ================================= */}
 
-                  <div className="grid gap-6 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-2">
 
                     <div>
-                      <label className="mb-2 block text-sm font-bold text-gray-700">
+
+                      <label className="mb-1.5 block text-xs font-bold text-gray-700">
                         Full Name
                       </label>
 
@@ -210,13 +327,15 @@ const Contact = () => {
                         type="text"
                         placeholder="Your name"
                         required
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
                       />
+
                     </div>
 
 
                     <div>
-                      <label className="mb-2 block text-sm font-bold text-gray-700">
+
+                      <label className="mb-1.5 block text-xs font-bold text-gray-700">
                         Email Address
                       </label>
 
@@ -224,84 +343,102 @@ const Contact = () => {
                         type="email"
                         placeholder="you@example.com"
                         required
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
                       />
+
                     </div>
 
                   </div>
 
 
-                  {/* PHONE */}
+                  {/* ================================
+                      PHONE + SUBJECT
+                  ================================= */}
 
-                  <div>
-                    <label className="mb-2 block text-sm font-bold text-gray-700">
-                      Phone Number
-                    </label>
+                  <div className="grid gap-4 md:grid-cols-2">
 
-                    <input
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      required
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
-                    />
+                    <div>
+
+                      <label className="mb-1.5 block text-xs font-bold text-gray-700">
+                        Phone Number
+                      </label>
+
+                      <input
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        required
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
+                      />
+
+                    </div>
+
+
+                    <div>
+
+                      <label className="mb-1.5 block text-xs font-bold text-gray-700">
+                        Subject
+                      </label>
+
+                      <select
+                        required
+                        defaultValue=""
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-[#ff4054]"
+                      >
+
+                        <option value="" disabled>
+                          Select a subject
+                        </option>
+
+                        <option value="test-drive">
+                          Book a Test Drive
+                        </option>
+
+                        <option value="buy-car">
+                          Enquiry About a Car
+                        </option>
+
+                        <option value="sell-car">
+                          Sell My Car
+                        </option>
+
+                        <option value="general">
+                          General Enquiry
+                        </option>
+
+                      </select>
+
+                    </div>
+
                   </div>
 
 
-                  {/* SUBJECT */}
+                  {/* ================================
+                      MESSAGE
+                  ================================= */}
 
                   <div>
-                    <label className="mb-2 block text-sm font-bold text-gray-700">
-                      Subject
-                    </label>
 
-                    <select
-                      required
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 outline-none transition focus:border-[#ff4054]"
-                    >
-                      <option value="">
-                        Select a subject
-                      </option>
-
-                      <option value="test-drive">
-                        Book a Test Drive
-                      </option>
-
-                      <option value="buy-car">
-                        Enquiry About a Car
-                      </option>
-
-                      <option value="sell-car">
-                        Sell My Car
-                      </option>
-
-                      <option value="general">
-                        General Enquiry
-                      </option>
-                    </select>
-                  </div>
-
-
-                  {/* MESSAGE */}
-
-                  <div>
-                    <label className="mb-2 block text-sm font-bold text-gray-700">
+                    <label className="mb-1.5 block text-xs font-bold text-gray-700">
                       Message
                     </label>
 
                     <textarea
-                      rows={6}
+                      rows={4}
                       placeholder="Write your message..."
                       required
-                      className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
+                      className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-[#ff4054] focus:ring-2 focus:ring-[#ff4054]/10"
                     />
+
                   </div>
 
 
-                  {/* SUBMIT */}
+                  {/* ================================
+                      SUBMIT
+                  ================================= */}
 
                   <button
                     type="submit"
-                    className="w-full rounded-xl bg-[#ff4054] py-4 font-bold text-white shadow-lg shadow-[#ff4054]/20 transition duration-300 hover:-translate-y-1 hover:bg-[#e9364a]"
+                    className="w-full rounded-xl bg-[#ff4054] py-3.5 text-sm font-bold text-white shadow-lg shadow-[#ff4054]/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#e9364a]"
                   >
                     Send Message →
                   </button>
@@ -311,7 +448,6 @@ const Contact = () => {
               )}
 
             </div>
-
           </Reveal>
 
         </div>

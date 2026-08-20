@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.61.9",
-    "@clerk/react": "^6.12.8",
     "@tailwindcss/vite": "^4.3.3",
     "chart.js": "^4.5.1",
     "lucide-react": "^1.28.0",
@@ -19,6 +18,7 @@
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
+    "sonner": "^2.0.8",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {

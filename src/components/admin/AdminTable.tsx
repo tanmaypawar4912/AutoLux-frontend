@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import { Check, X, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
 import { API } from "../../utils/api";
 
 interface Car {
@@ -13,6 +17,8 @@ interface Car {
   transmission: string;
   status: string;
   image: string;
+  featured?: boolean;
+  stock?: boolean;
 }
 
 interface Props {
@@ -21,11 +27,53 @@ interface Props {
 }
 
 const AdminTable = ({ cars, setCars }: Props) => {
+  const {
+    isLoaded: authLoaded,
+    isSignedIn,
+    getToken,
+  } = useAuth();
+
   const [loadingId, setLoadingId] = useState("");
 
-  // ==========================
+  // ==========================================
+  // GET CLERK AUTH HEADERS
+  // ==========================================
+
+  const getAuthHeaders = async () => {
+    if (!authLoaded) {
+      throw new Error(
+        "Clerk authentication is still loading."
+      );
+    }
+
+    if (!isSignedIn) {
+      throw new Error("Please login first.");
+    }
+
+    const token = await getToken();
+
+    console.log(
+      "ADMIN TABLE TOKEN:",
+      token
+        ? "TOKEN RECEIVED ✅"
+        : "TOKEN NOT RECEIVED ❌"
+    );
+
+    if (!token) {
+      throw new Error(
+        "Authentication token not available."
+      );
+    }
+
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+  };
+
+  // ==========================================
   // UPDATE STATUS
-  // ==========================
+  // ==========================================
 
   const updateStatus = async (
     id: string,
@@ -34,214 +82,392 @@ const AdminTable = ({ cars, setCars }: Props) => {
     try {
       setLoadingId(id);
 
-      const response = await fetch(`${API}/cars/${id}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
+      const headers = await getAuthHeaders();
+
+      const response = await fetch(
+        `${API}/cars/${id}/status`,
+        {
+          method: "PUT",
+          headers,
+          credentials: "include",
+          body: JSON.stringify({
+            status,
+          }),
+        }
+      );
 
       const data = await response.json();
 
-      if (data.success) {
-        setCars((prev) =>
-          prev.map((car) =>
-            car._id === id
-              ? { ...car, status }
-              : car
-          )
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message ||
+          "Failed to update status."
         );
-      } else {
-        alert(data.message);
       }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong.");
-    } finally {
-      setLoadingId("");
-    }
-  };
 
-  // ==========================
+      setCars((previous) =>
+        previous.map((car) =>
+          car._id === id
+            ? {
+              ...car,
+              ...data.car,
+              status:
+                data.car?.status || status,
+            }
+            : car
+        )
+      );
+
+      toast.success(
+        status === "approved"
+          ? "Car approved successfully! 🚗"
+          : "Car rejected successfully.",
+        {
+          description:
+            status === "approved"
+              ? "The car is now approved and visible in the system."
+              : "The car status has been updated to rejected.",
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Update status error:",
+        error
+      );
+
+      toast.error(
+        "Failed to update car status.",
+        {
+          description:
+            error instanceof Error
+              ? error.message
+              : "Something went wrong.",
+        }
+      );
+    }
+  }
+  // ==========================================
   // DELETE CAR
-  // ==========================
+  // ==========================================
 
   const deleteCar = async (id: string) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this car?"
     );
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) {
+      return;
+    }
 
     try {
       setLoadingId(id);
 
-      const response = await fetch(`${API}/cars/${id}`, {
-        method: "DELETE",
-      });
+      const headers = await getAuthHeaders();
+
+      const response = await fetch(
+        `${API}/cars/${id}`,
+        {
+          method: "DELETE",
+          headers,
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
 
-      if (data.success) {
-        setCars((prev) =>
-          prev.filter((car) => car._id !== id)
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message ||
+          "Failed to delete car."
         );
-      } else {
-        alert(data.message);
       }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong.");
-    } finally {
-      setLoadingId("");
+
+      setCars((previous) =>
+        previous.filter(
+          (car) => car._id !== id
+        )
+      );
+
+      toast.success(
+        "Car deleted successfully! 🗑️",
+        {
+          description:
+            "The car has been removed from the dealership.",
+        }
+      );
     }
-  };
+   catch (error) {
+  console.error(
+    "Delete car error:",
+    error
+  );
+
+  toast.error(
+    "Failed to delete car.",
+    {
+      description:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong.",
+    }
+  );
+}
+}
+  // ==========================================
+  // EMPTY STATE
+  // ==========================================
 
   if (cars.length === 0) {
     return (
-      <div className="rounded-2xl bg-white p-10 text-center shadow">
-        <h2 className="text-xl font-bold">
+      <div className="rounded-2xl bg-white p-10 text-center shadow-sm">
+        <h2 className="text-xl font-black text-gray-900">
           No Cars Found
         </h2>
+
+        <p className="mt-2 text-sm text-gray-500">
+          There are no cars available.
+        </p>
       </div>
     );
   }
 
-  return (
-    <div className="mt-10 overflow-hidden rounded-2xl bg-white shadow">
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
+  // ==========================================
+  // STATUS STYLE
+  // ==========================================
 
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-6 py-4 text-left">Image</th>
-              <th className="px-6 py-4 text-left">Car</th>
-              <th className="px-6 py-4 text-left">Seller</th>
-              <th className="px-6 py-4 text-left">Price</th>
-              <th className="px-6 py-4 text-left">Status</th>
-              <th className="px-6 py-4 text-center">Actions</th>
+  const getStatusStyle = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "approved":
+        return "bg-green-100 text-green-700";
+
+      case "rejected":
+        return "bg-red-100 text-red-700";
+
+      default:
+        return "bg-yellow-100 text-yellow-700";
+    }
+  };
+
+  // ==========================================
+  // AUTH LOADING
+  // ==========================================
+
+  if (!authLoaded) {
+    return (
+      <div className="rounded-2xl bg-white p-10 text-center shadow-sm">
+        <p className="font-semibold text-gray-500">
+          Loading authentication...
+        </p>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // TABLE
+  // ==========================================
+
+  return (
+    <div className="w-full overflow-hidden rounded-2xl bg-white shadow-sm">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full min-w-[1050px] table-auto">
+
+          {/* =================================
+              HEADER
+          ================================= */}
+
+          <thead>
+            <tr className="border-b bg-gray-50">
+
+              <th className="w-[30%] whitespace-nowrap px-5 py-4 text-left text-xs font-bold uppercase tracking-wide text-gray-500">
+                Car
+              </th>
+
+              <th className="w-[22%] whitespace-nowrap px-5 py-4 text-left text-xs font-bold uppercase tracking-wide text-gray-500">
+                Seller
+              </th>
+
+              <th className="w-[14%] whitespace-nowrap px-5 py-4 text-left text-xs font-bold uppercase tracking-wide text-gray-500">
+                Price
+              </th>
+
+              <th className="w-[13%] whitespace-nowrap px-5 py-4 text-left text-xs font-bold uppercase tracking-wide text-gray-500">
+                Status
+              </th>
+
+              {/* IMPORTANT:
+                  Fixed enough width for actions
+              */}
+              <th className="w-[21%] min-w-[220px] whitespace-nowrap px-5 py-4 text-left text-xs font-bold uppercase tracking-wide text-gray-500">
+                Actions
+              </th>
+
             </tr>
           </thead>
 
+          {/* =================================
+              BODY
+          ================================= */}
+
           <tbody>
-
             {cars.map((car) => (
-
               <tr
                 key={car._id}
-                className="border-b hover:bg-gray-50"
+                className="border-b last:border-0 hover:bg-gray-50"
               >
 
-                {/* IMAGE */}
+                {/* ===========================
+                    CAR
+                =========================== */}
 
-                <td className="px-6 py-4">
-                  <img
-                    src={car.image || "https://via.placeholder.com/150"}
-                    alt={car.model}
-                    onError={(e) => {
-                      e.currentTarget.src =
-                        "https://via.placeholder.com/150";
-                    }}
-                    className="h-20 w-28 rounded-lg object-cover"
-                  />
+                <td className="px-5 py-5">
+                  <div className="flex min-w-0 items-center gap-4">
+
+                    {car.image ? (
+                      <img
+                        src={car.image}
+                        alt={`${car.brand} ${car.model}`}
+                        className="h-16 w-24 shrink-0 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xs text-gray-400">
+                        No Image
+                      </div>
+                    )}
+
+                    <div className="min-w-0">
+                      <p className="truncate font-black text-gray-900">
+                        {car.brand}{" "}
+                        {car.model}
+                      </p>
+
+                      <p className="mt-1 text-xs text-gray-500">
+                        {car.year}
+                      </p>
+
+                      <p className="mt-1 whitespace-nowrap text-xs text-gray-400">
+                        {car.fuelType} •{" "}
+                        {car.transmission}
+                      </p>
+                    </div>
+
+                  </div>
                 </td>
 
-                {/* CAR */}
+                {/* ===========================
+                    SELLER
+                =========================== */}
 
-                <td className="px-6 py-4">
-                  <h3 className="text-lg font-bold">
-                    {car.brand} {car.model}
-                  </h3>
-
-                  <p className="text-sm text-gray-500">
-                    {car.year}
-                  </p>
-                </td>
-
-                {/* SELLER */}
-
-                <td className="px-6 py-4">
-                  <p className="font-semibold">
+                <td className="px-5 py-5">
+                  <p className="truncate font-semibold text-gray-900">
                     {car.sellerName}
                   </p>
 
-                  <p className="text-sm text-gray-500">
+                  <p className="mt-1 max-w-[220px] truncate text-xs text-gray-500">
                     {car.sellerEmail}
                   </p>
                 </td>
 
-                {/* PRICE */}
+                {/* ===========================
+                    PRICE
+                =========================== */}
 
-                <td className="px-6 py-4 font-bold text-[#ff4054]">
-                  ₹{Number(car.price).toLocaleString("en-IN")}
+                <td className="whitespace-nowrap px-5 py-5">
+                  <p className="font-black text-[#ff4054]">
+                    ₹
+                    {Number(
+                      car.price
+                    ).toLocaleString(
+                      "en-IN"
+                    )}
+                  </p>
                 </td>
 
-                {/* STATUS */}
+                {/* ===========================
+                    STATUS
+                =========================== */}
 
-                <td className="px-6 py-4">
+                <td className="whitespace-nowrap px-5 py-5">
                   <span
-                    className={`rounded-full px-4 py-2 text-sm font-bold text-white ${
-                      car.status === "approved"
-                        ? "bg-green-500"
-                        : car.status === "rejected"
-                        ? "bg-red-500"
-                        : "bg-yellow-500"
-                    }`}
+                    className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold capitalize ${getStatusStyle(
+                      car.status
+                    )}`}
                   >
-                    {car.status.charAt(0).toUpperCase() +
-                      car.status.slice(1)}
+                    {car.status}
                   </span>
                 </td>
 
-                {/* ACTIONS */}
+                {/* ===========================
+                    ACTIONS
+                =========================== */}
 
-                <td className="px-6 py-4">
-                  <div className="flex justify-center gap-3">
+                <td className="min-w-[220px] whitespace-nowrap px-5 py-5">
+
+                  {/* IMPORTANT:
+                      flex-nowrap prevents overlap
+                  */}
+
+                  <div className="flex w-max flex-nowrap items-center gap-2">
+
+                    {/* APPROVE */}
 
                     <button
-                      disabled={loadingId === car._id}
+                      type="button"
+                      title="Approve"
+                      disabled={
+                        loadingId === car._id
+                      }
                       onClick={() =>
                         updateStatus(
                           car._id,
                           "approved"
                         )
                       }
-                      className="rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:opacity-50"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600 transition hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {loadingId === car._id ? "..." : "✓"}
+                      <Check size={17} />
                     </button>
 
+                    {/* REJECT */}
+
                     <button
-                      disabled={loadingId === car._id}
+                      type="button"
+                      title="Reject"
+                      disabled={
+                        loadingId === car._id
+                      }
                       onClick={() =>
                         updateStatus(
                           car._id,
                           "rejected"
                         )
                       }
-                      className="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600 disabled:opacity-50"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {loadingId === car._id ? "..." : "✕"}
+                      <X size={17} />
                     </button>
 
+                    {/* DELETE */}
+
                     <button
-                      disabled={loadingId === car._id}
+                      type="button"
+                      title="Delete"
+                      disabled={
+                        loadingId === car._id
+                      }
                       onClick={() =>
                         deleteCar(car._id)
                       }
-                      className="rounded-lg bg-gray-800 px-4 py-2 text-white hover:bg-black disabled:opacity-50"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-700 transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {loadingId === car._id ? "..." : "🗑"}
+                      <Trash2 size={17} />
                     </button>
 
                   </div>
+
                 </td>
 
               </tr>
-
             ))}
-
           </tbody>
 
         </table>
