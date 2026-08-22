@@ -635,7 +635,7 @@ const Navbar = () => {
             {/* CTA */}
 
             <NavLink
-              to="/contact"
+              to="/book-test-drive"
               className="
                 whitespace-nowrap
                 rounded-xl
@@ -901,7 +901,7 @@ const Navbar = () => {
           {/* MOBILE CTA */}
 
           <NavLink
-            to="/contact"
+            to="/book-test-drive"
             onClick={closeMenu}
             className="
               mt-4

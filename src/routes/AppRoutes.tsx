@@ -12,6 +12,7 @@ import BuyCars from "../pages/BuyCars";
 import CarDetails from "../pages/CarDetails";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
+import BookTestDrive from "../pages/BookTestDrive";
 import NotFound from "../pages/NotFound";
 import SignIn from "../pages/SignIn";
 
@@ -41,6 +42,7 @@ import AdminUsers from "../pages/AdminUsers";
 import AdminWishlist from "../pages/AdminWishlist";
 import AdminReviews from "../pages/AdminReviews";
 import AdminEnquiries from "../pages/AdminEnquiries";
+import AdminContactMessages from "../pages/AdminContactMessages";
 import AdminSettings from "../pages/AdminSettings";
 
 // ==============================
@@ -85,6 +87,19 @@ const AppRoutes = () => {
       <Route
         path="/cars/:id"
         element={<CarDetails />}
+      />
+
+      {/* =====================================
+          BOOK TEST DRIVE
+      ====================================== */}
+
+      <Route
+        path="/book-test-drive"
+        element={
+          <ProtectedRoute>
+            <BookTestDrive />
+          </ProtectedRoute>
+        }
       />
 
       {/* =====================================
@@ -271,6 +286,19 @@ const AppRoutes = () => {
         element={
           <ProtectedAdminRoute>
             <AdminEnquiries />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      {/* =====================================
+          ADMIN CONTACT MESSAGES
+      ====================================== */}
+
+      <Route
+        path="/admin/contact-messages"
+        element={
+          <ProtectedAdminRoute>
+            <AdminContactMessages />
           </ProtectedAdminRoute>
         }
       />

@@ -6,6 +6,7 @@ import {
   Heart,
   Star,
   MessageSquare,
+  Mail,
   Settings,
   House,
   X,
@@ -78,6 +79,12 @@ const AdminSidebar = ({
       label: "Enquiries",
       icon: MessageSquare,
       path: "/admin/enquiries",
+    },
+    {
+      id: "contact-messages",
+      label: "Contact Messages",
+      icon: Mail,
+      path: "/admin/contact-messages",
     },
   ];
 
