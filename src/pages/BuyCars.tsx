@@ -1522,6 +1522,18 @@ const filteredCars =
       indexOfLastCar
     );
 
+  // Pagination display values
+  const showingFrom =
+    filteredCars.length > 0
+      ? indexOfFirstCar + 1
+      : 0;
+
+  const showingTo =
+    Math.min(
+      indexOfLastCar,
+      filteredCars.length
+    );
+
   // ======================================
   // RESET PAGE IF INVALID
   // ======================================
@@ -1760,39 +1772,38 @@ const filteredCars =
           {/* RIGHT SIDE - EXISTING CARS UI */}
           <section className="min-w-0">
 
+
             {/* RESULT COUNT */}
 
             {!loading && (
-              <div className="mt-10 flex items-center justify-between">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                 <p className="text-sm font-semibold text-gray-500">
-
-                  Showing
-
-                  <span className="mx-2 font-black text-[#111]">
-                    {
-                      filteredCars.length
-                    }
-                  </span>
-
-                  Cars
-
+                  Showing{" "}
+                  <span className="font-black text-[#111]">
+                    {showingFrom}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-black text-[#111]">
+                    {showingTo}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-black text-[#111]">
+                    {filteredCars.length}
+                  </span>{" "}
+                  cars
                 </p>
 
                 <button
                   type="button"
-                  onClick={
-                    handleClearFilters
-                  }
-                  className="rounded-xl border border-gray-300 bg-white px-5 py-2 text-sm font-semibold hover:border-[#ff4054]"
+                  onClick={handleClearFilters}
+                  className="w-full rounded-xl border border-gray-300 bg-white px-5 py-2 text-sm font-semibold transition hover:border-[#ff4054] sm:w-auto"
                 >
                   Clear Filters
                 </button>
 
               </div>
             )}
-
-            {/* LOADING */}
 
             {loading ? (
               <div className="mt-24 text-center">
@@ -2038,71 +2049,66 @@ const filteredCars =
 
                 </div>
 
+
                 {/* PAGINATION */}
 
                 {totalPages > 1 && (
-                  <div className="mt-14 flex justify-center gap-3">
+                  <div className="mt-10 flex w-full justify-center px-2 sm:mt-14 sm:px-0">
+                    <div className="flex w-full max-w-md items-center justify-center gap-2 sm:gap-3">
 
-                    <button
-                      type="button"
-                      disabled={
-                        currentPage === 1
-                      }
-                      onClick={() =>
-                        setCurrentPage(
-                          (p) => p - 1
-                        )
-                      }
-                      className="rounded-xl border px-5 py-3 disabled:opacity-40"
-                    >
-                      Previous
-                    </button>
+                      {/* PREVIOUS */}
 
-                    {Array.from(
-                      {
-                        length:
-                          totalPages,
-                      },
-                      (_, i) => (
-                        <button
-                          type="button"
-                          key={i}
-                          onClick={() =>
-                            setCurrentPage(
-                              i + 1
-                            )
-                          }
-                          className={`h-11 w-11 rounded-full font-bold ${currentPage ===
-                            i + 1
-                            ? "bg-[#ff4054] text-white"
-                            : "border bg-white"
-                            }`}
-                        >
-                          {i + 1}
-                        </button>
-                      )
-                    )}
+                      <button
+                        type="button"
+                        disabled={currentPage === 1}
+                        onClick={() =>
+                          setCurrentPage((p) =>
+                            Math.max(p - 1, 1)
+                          )
+                        }
+                        className="flex min-w-0 flex-1 items-center justify-center rounded-xl bg-[#a7adb5] px-3 py-3 text-xs font-bold text-white transition hover:bg-[#969ca4] disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none sm:px-5 sm:text-sm"
+                      >
+                        <span className="sm:hidden">
+                          ← Prev
+                        </span>
+                        <span className="hidden sm:inline">
+                          Previous
+                        </span>
+                      </button>
 
-                    <button
-                      type="button"
-                      disabled={
-                        currentPage ===
-                        totalPages
-                      }
-                      onClick={() =>
-                        setCurrentPage(
-                          (p) => p + 1
-                        )
-                      }
-                      className="rounded-xl bg-[#111] px-5 py-3 text-white disabled:opacity-40"
-                    >
-                      Next
-                    </button>
+                      {/* CURRENT PAGE / TOTAL PAGES */}
 
+                      <div
+                        aria-live="polite"
+                        className="flex min-w-[72px] flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-3 text-xs font-black text-[#111] shadow-sm sm:min-w-[78px] sm:px-4 sm:text-sm"
+                      >
+                        {currentPage} / {totalPages}
+                      </div>
+
+                      {/* NEXT */}
+
+                      <button
+                        type="button"
+                        disabled={currentPage === totalPages}
+                        onClick={() =>
+                          setCurrentPage((p) =>
+                            Math.min(p + 1, totalPages)
+                          )
+                        }
+                        className="flex min-w-0 flex-1 items-center justify-center rounded-xl bg-[#ff4054] px-3 py-3 text-xs font-bold text-white transition hover:bg-[#e6384b] disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none sm:px-5 sm:text-sm"
+                      >
+                        <span className="sm:hidden">
+                          Next →
+                        </span>
+                        <span className="hidden sm:inline">
+                          Next
+                        </span>
+                      </button>
+
+                    </div>
                   </div>
                 )}
-
-              </>
+                </>
             )}
 
           </section>
