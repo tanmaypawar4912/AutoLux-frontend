@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -338,15 +339,16 @@ const Navbar = () => {
         : "bg-black/20 backdrop-blur-md"
       : "bg-black border-b border-white/10 shadow-lg";
 
-  return (
+  const navbar = (
     <header
       className={`
         fixed
         left-0
         right-0
         top-0
-        z-[100]
+        z-[9999]
         w-full
+        isolate
         transition-all
         duration-300
         ${headerBackground}
@@ -359,10 +361,12 @@ const Navbar = () => {
 
       <nav
         className="
+          relative
           mx-auto
           flex
-          h-20
+          h-16
           w-full
+          lg:h-20
           items-center
           justify-between
           gap-4
@@ -662,43 +666,6 @@ const Navbar = () => {
 
         </div>
 
-        {/* MOBILE BUTTON */}
-
-        <button
-          type="button"
-          onClick={() =>
-            setIsOpen(
-              (prev) => !prev
-            )
-          }
-          aria-label={
-            isOpen
-              ? "Close navigation menu"
-              : "Open navigation menu"
-          }
-          className="
-            flex
-            h-11
-            w-11
-            shrink-0
-            items-center
-            justify-center
-            rounded-xl
-            border
-            border-white/20
-            bg-black/40
-            text-xl
-            text-white
-            transition
-            duration-200
-            hover:border-[#ff4054]
-            hover:text-[#ff4054]
-            lg:hidden
-          "
-        >
-          {isOpen ? "✕" : "☰"}
-        </button>
-
       </nav>
 
       {/* =====================================
@@ -708,7 +675,7 @@ const Navbar = () => {
       {isOpen && (
         <div
           className="
-            max-h-[calc(100vh-5rem)]
+            max-h-[calc(100vh-4rem)]
             overflow-y-auto
             border-t
             border-white/10
@@ -928,6 +895,73 @@ const Navbar = () => {
       )}
 
     </header>
+  );
+
+  /*
+   * MOBILE MENU BUTTON FIX
+   *
+   * Buy Cars contains scrolling/overflow containers.
+   * Mount the SAME existing button directly on document.body
+   * so those containers cannot hide or clip it.
+   *
+   * No Buy Cars UI/functionality is changed.
+   */
+  const mobileMenuButton =
+    typeof document !== "undefined"
+      ? createPortal(
+          <button
+            type="button"
+            onClick={() =>
+              setIsOpen(
+                (prev) => !prev
+              )
+            }
+            aria-label={
+              isOpen
+                ? "Close navigation menu"
+                : "Open navigation menu"
+            }
+            className="
+              fixed
+              right-4
+              top-3
+              z-[2147483647]
+              flex
+              h-11
+              w-11
+              items-center
+              justify-center
+              rounded-xl
+              border
+              border-white/20
+              bg-black/90
+              text-xl
+              text-white
+              shadow-lg
+              transition
+              duration-200
+              hover:border-[#ff4054]
+              hover:text-[#ff4054]
+              lg:hidden
+            "
+            style={{
+              position: "fixed",
+              right: "16px",
+              top: "12px",
+              zIndex: 2147483647,
+            }}
+          >
+            {isOpen ? "✕" : "☰"}
+          </button>,
+          document.body
+        )
+      : null;
+
+  return (
+    <>
+      {navbar}
+      {mobileMenuButton}
+    </>
   );
 };
 

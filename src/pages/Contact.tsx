@@ -263,7 +263,8 @@ const Contact = () => {
         <div className="mt-7 grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
           {/* CONTACT INFORMATION */}
 
-          <Reveal>
+          <div className="order-2 lg:order-1">
+            <Reveal>
             <div className="h-full rounded-3xl bg-[#111] p-7 text-white sm:p-8">
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#ff4054]">
                 Contact AutoLux
@@ -348,11 +349,13 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-          </Reveal>
+            </Reveal>
+          </div>
 
           {/* CONTACT FORM */}
 
-          <Reveal>
+          <div className="order-1 lg:order-2">
+            <Reveal>
             <div className="h-full rounded-3xl bg-white p-6 shadow-sm sm:p-8">
               {isSubmitted ? (
                 <div className="flex min-h-[430px] flex-col items-center justify-center text-center">
@@ -592,7 +595,9 @@ const Contact = () => {
                 </form>
               )}
             </div>
-          </Reveal>
+            </Reveal>
+          </div>
+          
         </div>
       </div>
     </main>

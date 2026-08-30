@@ -1617,7 +1617,7 @@ const SellCar = () => {
                   true
                 );
               }}
-              className="absolute right-0 top-0 rounded-xl bg-[#ff4054] px-6 py-4 text-sm font-bold text-white shadow-lg shadow-[#ff4054]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#e9364a] hover:shadow-xl"
+              className="static mb-6 w-full rounded-xl bg-[#ff4054] px-6 py-4 text-sm font-bold text-white shadow-lg shadow-[#ff4054]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#e9364a] hover:shadow-xl sm:absolute sm:right-0 sm:top-0 sm:mb-0 sm:w-auto"
             >
               Get Instant Estimate →
             </button>
@@ -2027,9 +2027,11 @@ const SellCar = () => {
 
           {/* =================================================
               LEFT INFORMATION
+              Mobile: appears SECOND (order-2)
+              Desktop: left column (lg:order-1)
           ================================================= */}
 
-          <Reveal>
+          <Reveal className="order-2 lg:order-1">
 
             <div className="rounded-3xl bg-[#111] p-7 text-white lg:sticky lg:top-28">
 
@@ -2123,9 +2125,11 @@ const SellCar = () => {
 
           {/* =================================================
               FORM
+              Mobile: appears FIRST (order-1)
+              Desktop: right column (lg:order-2)
           ================================================= */}
 
-          <Reveal>
+          <Reveal className="order-1 lg:order-2">
 
             <div className="rounded-3xl bg-white p-7 shadow-xl sm:p-8">
 

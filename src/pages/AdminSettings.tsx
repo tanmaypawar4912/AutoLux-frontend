@@ -1,8 +1,7 @@
-import {
+import{
   Settings,
   User,
   ShieldCheck,
-  LogOut,
   Plus,
   Trash2,
   Fuel,
@@ -19,12 +18,11 @@ import {
 } from "lucide-react";
 
 import {
-  useClerk,
   useAuth,
   useUser,
 } from "@clerk/clerk-react";
 
-import { useNavigate } from "react-router-dom";
+
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -71,9 +69,6 @@ type CarOptionCategory =
 // =====================================================
 
 const AdminSettings = () => {
-  const navigate = useNavigate();
-
-  const { signOut } = useClerk();
 
   const {
     isLoaded: authLoaded,
@@ -1324,42 +1319,6 @@ const AdminSettings = () => {
       }
     };
 
-  // ===================================================
-  // LOGOUT
-  // ===================================================
-
-  const handleLogout =
-    async () => {
-      const confirmed =
-        window.confirm(
-          "Are you sure you want to logout?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      try {
-        await signOut();
-
-        navigate(
-          "/login",
-          {
-            replace: true,
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Logout Error:",
-          error
-        );
-
-        showNotification(
-          "error",
-          "Unable to logout. Please try again."
-        );
-      }
-    };
 
   // ===================================================
   // AUTH LOADING
@@ -2414,79 +2373,7 @@ const AdminSettings = () => {
               </div>
 
             </div>
-
-          </div>
-
-          {/* =================================================
-              LOGOUT
-          ================================================= */}
-
-          <div
-            className="
-              mt-6
-              rounded-2xl
-              border
-              border-red-100
-              bg-white
-              p-6
-              shadow-sm
-            "
-          >
-
-            <div
-              className="
-                flex
-                flex-col
-                gap-4
-                sm:flex-row
-                sm:items-center
-                sm:justify-between
-              "
-            >
-
-              <div>
-
-                <h2 className="text-lg font-black text-gray-900">
-                  Logout
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  Sign out from your AutoLux
-                  admin account.
-                </p>
-
-              </div>
-
-              <button
-                type="button"
-                onClick={
-                  handleLogout
-                }
-                className="
-                  inline-flex
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  bg-red-500
-                  px-5
-                  py-3
-                  text-sm
-                  font-bold
-                  text-white
-                  transition
-                  hover:bg-red-600
-                "
-              >
-
-                <LogOut size={17} />
-
-                Logout
-
-              </button>
-
-            </div>
-
+            
           </div>
 
         </div>

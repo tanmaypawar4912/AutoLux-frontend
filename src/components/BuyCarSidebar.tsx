@@ -120,7 +120,7 @@ interface SectionProps {
 const FilterSection = ({
   title,
   children,
-  defaultOpen = true,
+  defaultOpen = false,
 }: SectionProps) => {
   const [open, setOpen] = useState(defaultOpen);
 

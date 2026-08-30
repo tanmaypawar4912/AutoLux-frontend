@@ -9,6 +9,7 @@ import {
   Mail,
   Settings,
   House,
+  LogOut,
   X,
 } from "lucide-react";
 
@@ -16,6 +17,10 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+
+import { useClerk } from "@clerk/clerk-react";
+
+import Swal from "sweetalert2";
 
 interface AdminSidebarProps {
   activeSection: string;
@@ -25,6 +30,7 @@ interface AdminSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
 const AdminSidebar = ({
   setActiveSection,
   isOpen,
@@ -32,6 +38,8 @@ const AdminSidebar = ({
 }: AdminSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { signOut } = useClerk();
 
   // =====================================
   // SIDEBAR MENU
@@ -133,6 +141,69 @@ const AdminSidebar = ({
   const handleGoToHome = () => {
     onClose();
     navigate("/");
+  };
+
+  // =====================================
+  // LOGOUT
+  // =====================================
+
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to logout?",
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Logout",
+      cancelButtonText: "Cancel",
+
+      confirmButtonColor: "#ff4054",
+      cancelButtonColor: "#6b7280",
+
+      reverseButtons: true,
+
+      background: "#111111",
+      color: "#ffffff",
+
+      customClass: {
+        popup: "autolux-logout-popup",
+        title: "autolux-logout-title",
+        htmlContainer: "autolux-logout-text",
+        confirmButton: "autolux-logout-confirm",
+        cancelButton: "autolux-logout-cancel",
+      },
+    });
+
+    // User clicked Cancel
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      await signOut();
+
+      onClose();
+
+      navigate("/login", {
+        replace: true,
+      });
+    } catch (error) {
+      console.error(
+        "Logout Error:",
+        error
+      );
+
+      await Swal.fire({
+        title: "Logout Failed",
+        text: "Unable to logout. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#ff4054",
+        background: "#111111",
+        color: "#ffffff",
+      });
+    }
   };
 
   return (
@@ -340,12 +411,45 @@ const AdminSidebar = ({
             sm:p-4
           "
         >
+          {/* GO TO HOME */}
+
+          <button
+            type="button"
+            onClick={handleGoToHome}
+            className="
+              flex
+              w-full
+              items-center
+              gap-3
+              rounded-xl
+              px-3
+              py-3
+              text-sm
+              font-semibold
+              text-gray-400
+              transition
+              hover:bg-white/10
+              hover:text-white
+              sm:gap-4
+              sm:px-4
+              sm:py-3.5
+            "
+          >
+            <House
+              size={19}
+              className="shrink-0"
+            />
+
+            <span>Go to Home</span>
+          </button>
+
           {/* SETTINGS */}
 
           <button
             type="button"
             onClick={handleSettings}
             className={`
+              mt-1.5
               flex
               w-full
               items-center
@@ -377,14 +481,14 @@ const AdminSidebar = ({
               className="shrink-0"
             />
 
-            Settings
+            <span>Settings</span>
           </button>
 
-          {/* GO TO HOME */}
+          {/* LOGOUT */}
 
           <button
             type="button"
-            onClick={handleGoToHome}
+            onClick={handleLogout}
             className="
               mt-1.5
               flex
@@ -398,19 +502,19 @@ const AdminSidebar = ({
               font-semibold
               text-gray-400
               transition
-              hover:bg-white/10
-              hover:text-white
+              hover:bg-red-500/10
+              hover:text-red-400
               sm:gap-4
               sm:px-4
               sm:py-3.5
             "
           >
-            <House
+            <LogOut
               size={19}
               className="shrink-0"
             />
 
-            Go to Home
+            <span>Logout</span>
           </button>
         </div>
       </aside>

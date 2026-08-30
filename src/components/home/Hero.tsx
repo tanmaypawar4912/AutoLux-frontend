@@ -167,15 +167,18 @@ const Hero = () => {
           z-10
           flex
           min-h-[115vh]
+          items-start
+          lg:items-end
           w-full
-          items-end
         "
       >
         <div
           className="
             w-full
             px-6
+            pt-28
             pb-20
+            lg:pt-0
             sm:px-10
             sm:pb-24
             lg:px-16

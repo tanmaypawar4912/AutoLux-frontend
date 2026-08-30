@@ -1937,9 +1937,9 @@ const filteredCars =
 
                           {/* CONTENT */}
 
-                          <div className="p-6">
+                          <div className="bg-white p-6">
 
-                            <div className="flex items-start justify-between">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 
                               <div>
 
@@ -1959,7 +1959,7 @@ const filteredCars =
 
                               </div>
 
-                              <span className="font-black text-[#ff4054]">
+                              <span className="shrink-0 self-start font-black text-[#ff4054] sm:self-auto">
                                 {car.price}
                               </span>
 
