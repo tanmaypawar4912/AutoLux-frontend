@@ -208,6 +208,13 @@ const AdminSidebar = ({
 
   return (
     <>
+      <style>{`
+        .autolux-admin-sidebar-scroll::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+        }
+      `}</style>
       {/* MOBILE OVERLAY */}
 
       {isOpen && (
@@ -310,13 +317,20 @@ const AdminSidebar = ({
 
         <nav
           className="
+            autolux-admin-sidebar-scroll
             flex-1
             overflow-y-auto
+            [scrollbar-width:none]
+            [-ms-overflow-style:none]
             px-3
             py-5
             sm:px-4
             sm:py-6
           "
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
         >
           <p
             className="

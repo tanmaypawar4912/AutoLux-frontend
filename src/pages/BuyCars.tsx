@@ -1244,8 +1244,13 @@ const filteredCars =
               car.name,
             ]
               .filter(Boolean)
-              .join(" ")
-              .toLowerCase();
+              .map((value) =>
+                String(value)
+                  .trim()
+                  .replace(/\s+/g, " ")
+                  .toLowerCase()
+              )
+              .join(" ");
 
             const matchesSearch =
               searchWords.length === 0 ||
