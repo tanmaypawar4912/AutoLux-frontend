@@ -11,7 +11,6 @@ import { useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
 
 import {
-  Menu,
   RefreshCw,
   Car,
   CalendarCheck,
@@ -26,6 +25,7 @@ import AdminTable from "../components/admin/AdminTable";
 import AdminSearch from "../components/admin/AdminSearch";
 import AdminFilter from "../components/admin/AdminFilter";
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminHeader from "../components/admin/AdminHeader";
 
 // =====================================================
 // TYPES
@@ -1428,39 +1428,9 @@ const AdminDashboard = () => {
       />
 
       <div className="min-h-screen w-full min-w-0 lg:ml-64 lg:w-[calc(100%-16rem)]">
-
-        {/* MOBILE HEADER */}
-
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white/95 px-4 shadow-sm backdrop-blur lg:hidden">
-
-          <button
-            type="button"
-            onClick={() =>
-              setSidebarOpen(true)
-            }
-            className="rounded-xl bg-gray-100 p-2.5 text-gray-700 transition hover:bg-gray-200"
-            aria-label="Open admin menu"
-          >
-            <Menu size={22} />
-          </button>
-
-          <div className="ml-4 min-w-0">
-
-            <h2 className="font-black text-gray-900">
-              Auto
-              <span className="text-[#ff4054]">
-                Lux
-              </span>
-            </h2>
-
-            <p className="text-xs text-gray-500">
-              Admin Panel
-            </p>
-
-          </div>
-
-        </header>
-
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         {/* MAIN */}
 
         <main className="min-h-screen w-full min-w-0 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8 lg:py-8">

@@ -10,6 +10,7 @@ import {
 import { useAuth } from "@clerk/clerk-react";
 
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminHeader from "../components/admin/AdminHeader";
 import { API } from "../utils/api";
 
 interface AdminUser {
@@ -221,31 +222,9 @@ const AdminUsers = () => {
           lg:w-[calc(100%-16rem)]
         "
       >
-
-        {/* MOBILE HEADER */}
-
-        <div className="border-b border-gray-200 bg-white px-4 py-4 lg:hidden">
-
-          <button
-            type="button"
-            onClick={() =>
-              setSidebarOpen(true)
-            }
-            className="
-              rounded-xl
-              bg-gray-900
-              px-4
-              py-2
-              text-sm
-              font-bold
-              text-white
-            "
-          >
-            ☰ Admin Menu
-          </button>
-
-        </div>
-
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         {/* CONTENT */}
 
         <div

@@ -10,6 +10,7 @@ import {
 import { toast } from "sonner";
 
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminHeader from "../components/admin/AdminHeader";
 import { API } from "../utils/api";
 
 interface ContactMessage {
@@ -299,15 +300,11 @@ const AdminContactMessages = () => {
       />
 
       <main className="min-h-screen lg:ml-64">
-        <div className="px-6 py-8 lg:px-8">
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(true)}
-            className="mb-6 rounded-xl bg-[#111] px-4 py-3 font-bold text-white lg:hidden"
-          >
-            ☰ Admin Menu
-          </button>
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+        />
 
+        <div className="px-6 py-8 lg:px-8">
           <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#ff4054]">

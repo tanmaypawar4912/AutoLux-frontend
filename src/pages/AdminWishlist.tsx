@@ -12,6 +12,7 @@ import {
 
 import { API } from "../utils/api";
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminHeader from "../components/admin/AdminHeader";
 
 interface WishlistCar {
   _id: string;
@@ -313,30 +314,11 @@ const AdminWishlist = () => {
 
       <main className="min-h-screen lg:ml-64">
 
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+        />
+
         <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-
-          {/* MOBILE MENU */}
-
-          <button
-            type="button"
-            onClick={() =>
-              setSidebarOpen(true)
-            }
-            className="
-              mb-6
-              rounded-xl
-              bg-[#111]
-              px-4
-              py-3
-              text-sm
-              font-bold
-              text-white
-              lg:hidden
-            "
-          >
-            ☰ Admin Menu
-          </button>
-
           {/* HEADER */}
 
           <div

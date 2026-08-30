@@ -50,6 +50,7 @@ import { useAuth } from"@clerk/clerk-react";
 import { toast } from "sonner";
 
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminHeader from "../components/admin/AdminHeader";
 import { API } from "../utils/api";
 
 // =====================================================
@@ -1567,6 +1568,10 @@ const AdminCars = () => {
           setSidebarOpen(false)
         }
       />
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+        />
+
 
       <main className="min-h-screen lg:ml-64">
 

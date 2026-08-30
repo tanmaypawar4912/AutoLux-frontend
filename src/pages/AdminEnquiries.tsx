@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminHeader from "../components/admin/AdminHeader";
 import { API } from "../utils/api";
 
 interface CarInfo {
@@ -419,29 +420,11 @@ const AdminEnquiries = () => {
 
       <main className="min-h-screen lg:ml-64">
 
+        <AdminHeader
+          onMenuClick={() => setSidebarOpen(true)}
+        />
+
         <div className="px-6 py-8 lg:px-8">
-
-          {/* MOBILE MENU */}
-
-          <button
-            type="button"
-            onClick={() =>
-              setSidebarOpen(true)
-            }
-            className="
-              mb-6
-              rounded-xl
-              bg-[#111]
-              px-4
-              py-3
-              font-bold
-              text-white
-              lg:hidden
-            "
-          >
-            ☰ Admin Menu
-          </button>
-
           {/* HEADER */}
 
           <div
