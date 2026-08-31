@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Heart } from "lucide-react";
+import { Heart, ChevronUp } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 
 import { API } from "../utils/api";
@@ -325,7 +325,19 @@ const BuyCars = () => {
       }, 2500);
     }
   };
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   // ======================================
   // BRAND FROM URL
   // ======================================
@@ -1189,43 +1201,43 @@ const BuyCars = () => {
         ...uniqueYears,
       ];
     }, [allCars]);
-    
-const kilometerRanges = useMemo(() => {
-  const ranges = [
-    { min: 0, max: 10000, label: "Under 10,000 km" },
-    { min: 10000, max: 30000, label: "10,000 - 30,000 km" },
-    { min: 30000, max: 60000, label: "30,000 - 60,000 km" },
-    { min: 60000, max: 100000, label: "60,000 - 1,00,000 km" },
-    { min: 100000, max: Infinity, label: "1,00,000+ km" },
-  ];
 
-  const availableKms = allCars
-    .map((car) => Number(car.kilometers))
-    .filter(
-      (kms) =>
-        Number.isFinite(kms) && kms >= 0
-    );
+  const kilometerRanges = useMemo(() => {
+    const ranges = [
+      { min: 0, max: 10000, label: "Under 10,000 km" },
+      { min: 10000, max: 30000, label: "10,000 - 30,000 km" },
+      { min: 30000, max: 60000, label: "30,000 - 60,000 km" },
+      { min: 60000, max: 100000, label: "60,000 - 1,00,000 km" },
+      { min: 100000, max: Infinity, label: "1,00,000+ km" },
+    ];
 
-  const activeRanges = ranges
-    .filter((range) =>
-      availableKms.some(
+    const availableKms = allCars
+      .map((car) => Number(car.kilometers))
+      .filter(
         (kms) =>
-          kms >= range.min &&
-          kms <= range.max
+          Number.isFinite(kms) && kms >= 0
+      );
+
+    const activeRanges = ranges
+      .filter((range) =>
+        availableKms.some(
+          (kms) =>
+            kms >= range.min &&
+            kms <= range.max
+        )
       )
-    )
-    .map((range) => range.label);
+      .map((range) => range.label);
 
-  return ["All", ...activeRanges];
-}, [allCars]);
+    return ["All", ...activeRanges];
+  }, [allCars]);
 
-// ======================================
-// FILTER + SORT
-// ======================================
+  // ======================================
+  // FILTER + SORT
+  // ======================================
 
-const filteredCars =
-  useMemo(() => {
-     let result =
+  const filteredCars =
+    useMemo(() => {
+      let result =
         allCars.filter(
           (car) => {
             const search =
@@ -2113,7 +2125,7 @@ const filteredCars =
                     </div>
                   </div>
                 )}
-                </>
+              </>
             )}
 
           </section>
@@ -2134,6 +2146,41 @@ const filteredCars =
       {/* COMPARE BAR */}
 
       <CompareBar />
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            })
+          }
+          className="
+      fixed
+      bottom-24
+      right-5
+      z-[999]
+      flex
+      h-12
+      items-center
+      gap-2
+      rounded-full
+      bg-[#ff4054]
+      px-5
+      text-sm
+      font-bold
+      text-white
+      shadow-xl
+      transition-all
+      duration-300
+      hover:scale-105
+      lg:hidden
+    "
+        >
+          Top
+          <ChevronUp size={18} />
+        </button>
+      )}
 
     </main>
   );
