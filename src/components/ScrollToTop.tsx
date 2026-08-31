@@ -23,7 +23,6 @@ const ScrollToTop = () => {
       { passive: true }
     );
 
-    // Reset when page first loads
     handleScroll();
 
     return () => {
@@ -49,7 +48,7 @@ const ScrollToTop = () => {
   }, [pathname]);
 
   // =========================================
-  // SCROLL TO TOP FUNCTION
+  // SCROLL TO TOP
   // =========================================
 
   const handleScrollToTop = () => {
@@ -96,8 +95,6 @@ const ScrollToTop = () => {
             hover:shadow-2xl
 
             active:scale-95
-
-            lg:hidden
           "
         >
           <span>Top</span>
