@@ -72,10 +72,22 @@ const AdminFilter = ({
     year !== "all";
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+    <div
+      className="
+        w-full
+        max-w-full
+        overflow-hidden
+        rounded-2xl
+        border
+        border-gray-200
+        bg-gray-50
+        p-4
+        sm:p-5
+      "
+    >
       {/* HEADER */}
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <h3 className="text-lg font-black text-gray-900">
             Filters
           </h3>
@@ -92,6 +104,7 @@ const AdminFilter = ({
             className="
               flex
               w-fit
+              shrink-0
               items-center
               gap-2
               rounded-xl
@@ -115,12 +128,29 @@ const AdminFilter = ({
       </div>
 
       {/* STATUS */}
-      <div>
+      <div className="w-full">
         <p className="mb-3 text-sm font-bold text-gray-700">
           Status
         </p>
 
-        <div className="flex flex-wrap gap-3">
+        {/* 
+          MOBILE:
+          4 buttons always stay in one row.
+
+          DESKTOP:
+          Original flex behaviour is preserved.
+        */}
+        <div
+          className="
+            grid
+            w-full
+            grid-cols-4
+            gap-2
+            sm:flex
+            sm:flex-wrap
+            sm:gap-3
+          "
+        >
           {statusFilters.map((filter) => {
             const isActive = status === filter.id;
 
@@ -130,13 +160,22 @@ const AdminFilter = ({
                 type="button"
                 onClick={() => setStatus(filter.id)}
                 className={`
+                  flex
+                  min-w-0
+                  items-center
+                  justify-center
+                  whitespace-nowrap
                   rounded-xl
                   border
-                  px-5
-                  py-3
+                  px-2
+                  py-2.5
+                  text-xs
                   font-semibold
                   transition-all
                   duration-200
+                  sm:px-5
+                  sm:py-3
+                  sm:text-sm
                   ${
                     isActive
                       ? filter.activeClass
@@ -152,9 +191,18 @@ const AdminFilter = ({
       </div>
 
       {/* DATABASE FILTERS */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className="
+          mt-6
+          grid
+          grid-cols-1
+          gap-4
+          sm:grid-cols-2
+          lg:grid-cols-4
+        "
+      >
         {/* BRAND */}
-        <div>
+        <div className="min-w-0">
           <label className="mb-2 block text-sm font-bold text-gray-700">
             Brand
           </label>
@@ -164,6 +212,7 @@ const AdminFilter = ({
             onChange={(e) => setBrand(e.target.value)}
             className="
               w-full
+              min-w-0
               rounded-xl
               border
               border-gray-200
@@ -188,7 +237,7 @@ const AdminFilter = ({
         </div>
 
         {/* FUEL TYPE */}
-        <div>
+        <div className="min-w-0">
           <label className="mb-2 block text-sm font-bold text-gray-700">
             Fuel Type
           </label>
@@ -198,6 +247,7 @@ const AdminFilter = ({
             onChange={(e) => setFuelType(e.target.value)}
             className="
               w-full
+              min-w-0
               rounded-xl
               border
               border-gray-200
@@ -222,7 +272,7 @@ const AdminFilter = ({
         </div>
 
         {/* TRANSMISSION */}
-        <div>
+        <div className="min-w-0">
           <label className="mb-2 block text-sm font-bold text-gray-700">
             Transmission
           </label>
@@ -232,6 +282,7 @@ const AdminFilter = ({
             onChange={(e) => setTransmission(e.target.value)}
             className="
               w-full
+              min-w-0
               rounded-xl
               border
               border-gray-200
@@ -256,7 +307,7 @@ const AdminFilter = ({
         </div>
 
         {/* YEAR */}
-        <div>
+        <div className="min-w-0">
           <label className="mb-2 block text-sm font-bold text-gray-700">
             Year
           </label>
@@ -266,6 +317,7 @@ const AdminFilter = ({
             onChange={(e) => setYear(e.target.value)}
             className="
               w-full
+              min-w-0
               rounded-xl
               border
               border-gray-200

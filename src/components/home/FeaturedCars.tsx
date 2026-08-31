@@ -20,50 +20,35 @@ interface Car {
 }
 
 const FeaturedCars = () => {
-
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchCars = async () => {
-
       try {
-
         const response = await fetch(`${API}/cars`);
 
         const data = await response.json();
 
         if (data.success) {
-
           const featured = data.cars
             .filter((car: Car) => car.status === "approved")
             .slice(0, 6);
 
           setCars(featured);
-
         }
-
       } catch (error) {
-
         console.error(error);
-
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
     fetchCars();
-
   }, []);
 
   return (
-
     <section className="relative overflow-hidden bg-[#f8f8f8] px-6 py-28">
-
       {/* Background */}
 
       <div className="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-[#ff4054]/5 blur-3xl" />
@@ -71,15 +56,11 @@ const FeaturedCars = () => {
       <div className="pointer-events-none absolute -left-40 bottom-0 h-72 w-72 rounded-full bg-[#ff4054]/5 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-
         {/* Header */}
 
         <Reveal>
-
           <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-
             <div>
-
               <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#ff4054]">
                 Our Collection
               </p>
@@ -87,6 +68,7 @@ const FeaturedCars = () => {
               <h2 className="mt-4 text-4xl font-black text-[#111] md:text-6xl">
                 Featured Cars
               </h2>
+
               <p className="mt-4 text-lg text-gray-500">
                 {cars.length} Premium Cars Available
               </p>
@@ -94,7 +76,6 @@ const FeaturedCars = () => {
               <p className="mt-5 max-w-xl text-gray-500">
                 Explore our latest approved premium cars directly from verified sellers.
               </p>
-
             </div>
 
             <Link
@@ -106,32 +87,24 @@ const FeaturedCars = () => {
               <span className="transition group-hover:translate-x-2">
                 →
               </span>
-
             </Link>
-
           </div>
-
         </Reveal>
 
         {/* Loading */}
 
         {loading ? (
-
           <div className="py-24 text-center">
-
-            <div className="text-6xl animate-bounce">
+            <div className="animate-bounce text-6xl">
               🚗
             </div>
 
             <h2 className="mt-6 text-3xl font-black">
               Loading Cars...
             </h2>
-
           </div>
-
         ) : cars.length === 0 ? (
           <div className="py-20 text-center">
-
             <h2 className="text-4xl font-black">
               No Approved Cars Available
             </h2>
@@ -139,13 +112,10 @@ const FeaturedCars = () => {
             <p className="mt-4 text-gray-500">
               Please check again later.
             </p>
-
           </div>
         ) : (
-
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {cars.map((car, index) => (
-
               <Reveal
                 key={car._id}
                 className={
@@ -156,7 +126,6 @@ const FeaturedCars = () => {
                       : "delay-300"
                 }
               >
-
                 <div
                   className="
                     group
@@ -173,6 +142,37 @@ const FeaturedCars = () => {
                     hover:shadow-2xl
                   "
                 >
+                  {/* =====================================================
+                      MOBILE BRAND
+                      Brand is OUTSIDE the image so it cannot overlap.
+                  ====================================================== */}
+
+                  <div
+                    className="
+                      flex
+                      min-h-14
+                      items-center
+                      px-5
+                      py-3
+                      sm:hidden
+                    "
+                  >
+                    <span
+                      className="
+                        rounded-full
+                        bg-gray-100
+                        px-4
+                        py-2
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-widest
+                        text-[#111]
+                      "
+                    >
+                      {car.brand}
+                    </span>
+                  </div>
 
                   {/* IMAGE */}
 
@@ -187,7 +187,6 @@ const FeaturedCars = () => {
                       bg-[#f1f1f1]
                     "
                   >
-
                     <div
                       className="
                         absolute
@@ -217,11 +216,18 @@ const FeaturedCars = () => {
                       "
                     />
 
+                    {/* =================================================
+                        DESKTOP BRAND
+                        Existing desktop appearance preserved.
+                    ================================================== */}
+
                     <span
                       className="
                         absolute
                         left-5
                         top-5
+                        z-20
+                        hidden
                         rounded-full
                         bg-white/80
                         px-4
@@ -231,21 +237,18 @@ const FeaturedCars = () => {
                         uppercase
                         tracking-widest
                         backdrop-blur
+                        sm:block
                       "
                     >
                       {car.brand}
                     </span>
-
                   </div>
 
                   {/* CONTENT */}
 
                   <div className="p-7">
-
                     <div className="flex items-start justify-between gap-4">
-
                       <div>
-
                         <h3 className="text-2xl font-black text-[#111]">
                           {car.model}
                         </h3>
@@ -253,13 +256,11 @@ const FeaturedCars = () => {
                         <p className="mt-2 text-sm text-gray-500">
                           {car.year} • {car.fuelType} • {car.transmission}
                         </p>
-
                       </div>
 
-                      <span className="text-sm font-black text-[#ff4054] whitespace-nowrap">
+                      <span className="whitespace-nowrap text-sm font-black text-[#ff4054]">
                         ₹{Number(car.price).toLocaleString("en-IN")}
                       </span>
-
                     </div>
 
                     {/* SPECS */}
@@ -275,9 +276,7 @@ const FeaturedCars = () => {
                         py-5
                       "
                     >
-
                       <div>
-
                         <p className="text-sm font-black">
                           {Number(car.kilometers).toLocaleString()} km
                         </p>
@@ -285,11 +284,9 @@ const FeaturedCars = () => {
                         <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">
                           Driven
                         </p>
-
                       </div>
 
                       <div>
-
                         <p className="text-sm font-black">
                           {car.transmission}
                         </p>
@@ -297,11 +294,9 @@ const FeaturedCars = () => {
                         <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">
                           Gearbox
                         </p>
-
                       </div>
 
                       <div>
-
                         <p className="text-sm font-black">
                           {car.fuelType}
                         </p>
@@ -309,9 +304,7 @@ const FeaturedCars = () => {
                         <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">
                           Fuel
                         </p>
-
                       </div>
-
                     </div>
 
                     <p className="mt-5 line-clamp-3 text-sm leading-7 text-gray-500">
@@ -344,27 +337,16 @@ const FeaturedCars = () => {
                       <span className="transition group-hover:translate-x-1">
                         →
                       </span>
-
                     </Link>
-
                   </div>
-
                 </div>
-
               </Reveal>
-
             ))}
-
           </div>
-
         )}
-
       </div>
-
     </section>
-
   );
-
 };
 
 export default FeaturedCars;

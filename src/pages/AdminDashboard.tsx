@@ -1490,28 +1490,70 @@ const StatCard = ({
   };
 
   return (
-    <div className="min-w-0 overflow-hidden rounded-2xl bg-white p-4 shadow-sm sm:p-5">
+    <div
+      className="
+        min-w-0
+        overflow-hidden
+        rounded-2xl
+        bg-white
+        p-4
+        shadow-sm
+        sm:p-5
+        max-sm:flex
+        max-sm:items-center
+        max-sm:gap-3
+        max-sm:px-3
+        max-sm:py-3
+      "
+    >
 
       <div
         className={`
           flex
           h-11
           w-11
+          shrink-0
           items-center
           justify-center
           rounded-xl
           ${colors[color].box}
           ${colors[color].icon}
+          max-sm:h-9
+          max-sm:w-9
+          max-sm:rounded-lg
         `}
       >
         {icon}
       </div>
 
-      <p className="mt-4 truncate text-sm font-semibold text-gray-500">
+      <p
+        className="
+          mt-4
+          min-w-0
+          truncate
+          text-sm
+          font-semibold
+          text-gray-500
+          max-sm:mt-0
+          max-sm:flex-1
+          max-sm:text-xs
+        "
+      >
         {title}
       </p>
 
-      <p className="mt-1 text-2xl font-black text-gray-900 sm:text-3xl">
+      <p
+        className="
+          mt-1
+          shrink-0
+          text-2xl
+          font-black
+          text-gray-900
+          sm:text-3xl
+          max-sm:mt-0
+          max-sm:text-xl
+        "
+      >
         {value.toLocaleString(
           "en-IN"
         )}
