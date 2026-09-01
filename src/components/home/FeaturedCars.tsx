@@ -49,6 +49,7 @@ const FeaturedCars = () => {
 
   return (
     <section className="relative overflow-hidden bg-[#f8f8f8] px-6 py-28">
+      
       {/* Background */}
 
       <div className="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-[#ff4054]/5 blur-3xl" />
@@ -56,6 +57,7 @@ const FeaturedCars = () => {
       <div className="pointer-events-none absolute -left-40 bottom-0 h-72 w-72 rounded-full bg-[#ff4054]/5 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
+      
         {/* Header */}
 
         <Reveal>
@@ -142,10 +144,7 @@ const FeaturedCars = () => {
                     hover:shadow-2xl
                   "
                 >
-                  {/* =====================================================
-                      MOBILE BRAND
-                      Brand is OUTSIDE the image so it cannot overlap.
-                  ====================================================== */}
+                  {/*MOBILE BRAND */}
 
                   <div
                     className="
@@ -216,10 +215,10 @@ const FeaturedCars = () => {
                       "
                     />
 
-                    {/* =================================================
+                    {/* 
                         DESKTOP BRAND
                         Existing desktop appearance preserved.
-                    ================================================== */}
+                     */}
 
                     <span
                       className="
